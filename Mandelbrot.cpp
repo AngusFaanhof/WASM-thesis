@@ -7,8 +7,8 @@
 
 int REAL_MIN = -2;
 int REAL_MAX = 1;
-int IMAGINARY_MIN = -1.5;
-int IMAGINARY_MAX = 1.5;
+double IMAGINARY_MIN = -1.5;
+double IMAGINARY_MAX = 1.5;
 int MAX_ITERATIONS = 100;
 
 void saveMandelbrot(int* mandelbrot, int pixelWidth, int pixelHeight) {
