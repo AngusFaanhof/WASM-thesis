@@ -16,25 +16,9 @@ int* generateRandomMatrix(int rows, int cols) {
 	return matrix;
 }
 
-int main(int argc, char** args) {
-	// seed random number generator
-	srand(time(NULL));
-
-	int rowsA = (argc > 1) ? atoi(args[1]) : DEFAULT_ROWS;
-	int colsA = (argc > 2) ? atoi(args[2]) : DEFAULT_COLS;
-	int rowsB = (argc > 3) ? atoi(args[3]) : DEFAULT_ROWS;
-	int colsB = (argc > 4) ? atoi(args[4]) : DEFAULT_COLS;
-
-	if (colsA != rowsB) {
-		std::cout << "Matrix dimensions are not compatible for multiplication" << std::endl;
-		return 1;
-	}
-
-	int* matrixA = generateRandomMatrix(rowsA, colsA);
-	int* matrixB = generateRandomMatrix(rowsB, colsB);
+int* MatrixMultiplication(int* matrixA, int rowsA, int colsA, int* matrixB, int rowsB, int colsB) {
 	int* matrixResult = new int[rowsA * colsB];
 
-	// vectorized matrix multiplication
 	for (int i = 0; i < rowsA; i++) {
 		for (int j = 0; j < colsB; j++) {
 			int indexSum = 0;
@@ -57,6 +41,28 @@ int main(int argc, char** args) {
 			matrixResult[i * colsB + j] += indexSum;
 		}
 	}
+
+	return matrixResult;
+}
+
+
+int main(int argc, char** args) {
+	// seed random number generator
+	srand(time(NULL));
+
+	int rowsA = (argc > 1) ? atoi(args[1]) : DEFAULT_ROWS;
+	int colsA = (argc > 2) ? atoi(args[2]) : DEFAULT_COLS;
+	int rowsB = (argc > 3) ? atoi(args[3]) : DEFAULT_ROWS;
+	int colsB = (argc > 4) ? atoi(args[4]) : DEFAULT_COLS;
+
+	if (colsA != rowsB) {
+		std::cout << "Matrix dimensions are not compatible for multiplication" << std::endl;
+		return 1;
+	}
+
+	int* matrixA = generateRandomMatrix(rowsA, colsA);
+	int* matrixB = generateRandomMatrix(rowsB, colsB);
+	int* matrixResult = MatrixMultiplication(matrixA, rowsA, colsA, matrixB, rowsB, colsB);
 
 	return 0;
 }
