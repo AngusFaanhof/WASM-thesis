@@ -1,6 +1,6 @@
 # Compile
 ## Emscripten
-`em++ MatrixMultiplication.cpp -mavx -o MatrixMultiplication.wasm`
+`em++ MatrixMultiplication.cpp -mavx -msimd128 -o MatrixMultiplication.wasm`
 ## C++
 `g++ -mavx MatrixMultiplication.cpp -o MatrixMultiplication`
 

@@ -1,28 +1,12 @@
 #include <immintrin.h>
 
 #include <iostream>
-#include <random>
-
-#include <fstream>
 
 int REAL_MIN = -2;
 int REAL_MAX = 1;
 double IMAGINARY_MIN = -1.5;
 double IMAGINARY_MAX = 1.5;
 int MAX_ITERATIONS = 100;
-
-void saveMandelbrot(int* mandelbrot, int pixelWidth, int pixelHeight) {
-	std::ofstream file("mandelbrot.txt");
-
-	for (int i = 0; i < pixelWidth; i++) {
-		for (int j = 0; j < pixelHeight; j++) {
-			file << mandelbrot[i * pixelHeight + j] << ',';
-		}
-		file << '\n';
-	}
-
-	file.close();
-}
 
 int* unvectorizedMandelbrot(int pixelWidth, int pixelHeight) {
 	int* mandelbrot = new int[pixelWidth * pixelHeight];
@@ -119,6 +103,5 @@ int main() {
 	int* mandelbrot = vectorizedMandelbrot(pixelWidth, pixelHeight);
 	int* mandelbrot2 = unvectorizedMandelbrot(pixelWidth, pixelHeight);
 
-	saveMandelbrot(mandelbrot2, pixelWidth, pixelHeight);
 	return 0;
 }
