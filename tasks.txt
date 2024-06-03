@@ -1,0 +1,3 @@
+Create single test file (include methods)
+Generate test data (Sizes power of 2)
+Use chrono to meassure time

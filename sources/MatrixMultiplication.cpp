@@ -1,10 +1,11 @@
 #include <immintrin.h>
 #include <iostream>
 #include <random>
+#include <chrono>
 
 int MAX_VALUE = 10000;
-int DEFAULT_ROWS = 128;
-int DEFAULT_COLS = 128;
+int DEFAULT_ROWS = 1024;
+int DEFAULT_COLS = 1024;
 
 int* generateRandomMatrix(int rows, int cols) {
 	int* matrix = new int[rows * cols];
@@ -46,23 +47,26 @@ int* MatrixMultiplication(int* matrixA, int rowsA, int colsA, int* matrixB, int 
 }
 
 
-int main(int argc, char** args) {
-	// seed random number generator
-	srand(time(NULL));
+// int main(int argc, char** args) {
+// 	// seed random number generator
+// 	srand(time(NULL));
 
-	int rowsA = (argc > 1) ? atoi(args[1]) : DEFAULT_ROWS;
-	int colsA = (argc > 2) ? atoi(args[2]) : DEFAULT_COLS;
-	int rowsB = (argc > 3) ? atoi(args[3]) : DEFAULT_ROWS;
-	int colsB = (argc > 4) ? atoi(args[4]) : DEFAULT_COLS;
+// 	int rowsA = (argc > 1) ? atoi(args[1]) : DEFAULT_ROWS;
+// 	int colsA = (argc > 2) ? atoi(args[2]) : DEFAULT_COLS;
+// 	int rowsB = (argc > 3) ? atoi(args[3]) : DEFAULT_ROWS;
+// 	int colsB = (argc > 4) ? atoi(args[4]) : DEFAULT_COLS;
 
-	if (colsA != rowsB) {
-		std::cout << "Matrix dimensions are not compatible for multiplication" << std::endl;
-		return 1;
-	}
+// 	if (colsA != rowsB) {
+// 		std::cout << "Matrix dimensions are not compatible for multiplication" << std::endl;
+// 		return 1;
+// 	}
 
-	int* matrixA = generateRandomMatrix(rowsA, colsA);
-	int* matrixB = generateRandomMatrix(rowsB, colsB);
-	int* matrixResult = MatrixMultiplication(matrixA, rowsA, colsA, matrixB, rowsB, colsB);
+// 	int* matrixA = generateRandomMatrix(rowsA, colsA);
+// 	int* matrixB = generateRandomMatrix(rowsB, colsB);
 
-	return 0;
-}
+// 	auto start = std::chrono::high_resolution_clock::now();
+
+// 	int* matrixResult = MatrixMultiplication(matrixA, rowsA, colsA, matrixB, rowsB, colsB);
+
+// 	return 0;
+// }
