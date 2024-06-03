@@ -1,21 +1,4 @@
 #include <immintrin.h>
-#include <iostream>
-#include <random>
-#include <chrono>
-
-int MAX_VALUE = 10000;
-int DEFAULT_ROWS = 1024;
-int DEFAULT_COLS = 1024;
-
-int* generateRandomMatrix(int rows, int cols) {
-	int* matrix = new int[rows * cols];
-
-	for (int i = 0; i < rows * cols; i++) {
-		matrix[i] = rand() % MAX_VALUE;
-	}
-
-	return matrix;
-}
 
 int* multiplyMatrices(int* matrixA, int rowsA, int colsA, int* matrixB, int rowsB, int colsB) {
 	int* matrixResult = new int[rowsA * colsB];
