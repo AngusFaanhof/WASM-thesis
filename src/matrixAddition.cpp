@@ -1,6 +1,6 @@
 #include <immintrin.h>
 
-#include "../include/MatrixAddition.h"
+#include "../include/matrixAddition.h"
 
 float* addMatrices(float* matrixA, float* matrixB, int size) {
 	float* matrixResult = new float[size];

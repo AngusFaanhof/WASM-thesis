@@ -1,5 +1,7 @@
 #include <immintrin.h>
 
+#include "../include/matrixMultiplication.h"
+
 int* multiplyMatrices(int* matrixA, int rowsA, int colsA, int* matrixB, int rowsB, int colsB) {
 	int* matrixResult = new int[rowsA * colsB];
 
