@@ -16,5 +16,6 @@
 g++ {File}.cpp -mavx -o {File}
 em++ {File}.cpp -mavx -msimd128 -o {File}.wasm
 
-em++ -mavx -msimd128 -o benchmark.wasm benchmark.cpp  MatrixAddition.cpp helper.cpp dotProduct.cpp MatrixMultiplication.cpp
-g++ -mavx -o benchmark benchmark.cpp  MatrixAddition.cpp helper.cpp dotProduct.cpp MatrixMultiplication.cpp
+em++ -mavx -msimd128 -o ../benchmark.wasm benchmark.cpp  MatrixAddition.cpp helper.cpp dotProduct.cpp MatrixMultiplication.cpp mandelbrot.cpp
+
+g++ -mavx -o ../benchmark benchmark.cpp  MatrixAddition.cpp helper.cpp dotProduct.cpp MatrixMultiplication.cpp mandelbrot.cpp
