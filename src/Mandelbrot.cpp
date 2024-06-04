@@ -2,53 +2,19 @@
 
 #include <iostream>
 
-int REAL_MIN = -2;
-int REAL_MAX = 1;
-double IMAGINARY_MIN = -1.5;
-double IMAGINARY_MAX = 1.5;
-int MAX_ITERATIONS = 100;
+#include "../include/mandelbrot.h"
 
-int* unvectorizedMandelbrot(int pixelWidth, int pixelHeight) {
+float REAL_MIN = -2.0;
+float REAL_MAX = 1.0;
+float IMAGINARY_MIN = -1.5;
+float IMAGINARY_MAX = 1.5;
+
+int* vectorizedMandelbrot(int pixelWidth, int pixelHeight, int maxIterations) {
 	int* mandelbrot = new int[pixelWidth * pixelHeight];
 
-	float xScale = static_cast<float>((REAL_MAX - REAL_MIN)) / pixelWidth;
-	float yScale = static_cast<float>(IMAGINARY_MAX - IMAGINARY_MIN) / pixelHeight;
+	float xScale = (REAL_MAX - REAL_MIN) / pixelWidth;
+	float yScale = (IMAGINARY_MAX - IMAGINARY_MIN) / pixelHeight;
 
-	for (int y = 0; y < pixelHeight; y++) {
-		for (int x = 0; x < pixelWidth; x++) {
-			float cReal = REAL_MIN + x * xScale;
-			float cImaginary = IMAGINARY_MIN + y * yScale;
-
-			float zReal = 0;
-			float zImaginary = 0;
-
-			int n = 0;
-			while (n < MAX_ITERATIONS) {
-				float zRealSquared = zReal * zReal;
-				float zImaginarySquared = zImaginary * zImaginary;
-
-				float magnitude = zRealSquared + zImaginarySquared;
-				if (magnitude >= 4) break;
-
-				float tempZReal = zRealSquared - zImaginarySquared + cReal;
-				zImaginary = 2 * zReal * zImaginary + cImaginary;
-				zReal = tempZReal;
-
-				n++;
-			}
-
-			mandelbrot[y * pixelWidth + x] = n;
-		}
-	}
-
-	return mandelbrot;
-}
-
-int* vectorizedMandelbrot(int pixelWidth, int pixelHeight) {
-	int* mandelbrot = new int[pixelWidth * pixelHeight];
-
-	float xScale = static_cast<float>((REAL_MAX - REAL_MIN)) / pixelWidth;
-	float yScale = static_cast<float>(IMAGINARY_MAX - IMAGINARY_MIN) / pixelHeight;
 
 	__m128 realMin = _mm_set1_ps(REAL_MIN);
 	__m128 xScaleVector = _mm_set1_ps(xScale);
@@ -70,7 +36,7 @@ int* vectorizedMandelbrot(int pixelWidth, int pixelHeight) {
 			__m128i numIterations = _mm_set1_epi32(0);
 
 			int n = 0;
-			while (n < MAX_ITERATIONS) {
+			while (n < maxIterations) {
 				__m128 zRealSquared = _mm_mul_ps(zReal, zReal);
 				__m128 zImaginarySquared = _mm_mul_ps(zImaginary, zImaginary);
 
@@ -94,14 +60,4 @@ int* vectorizedMandelbrot(int pixelWidth, int pixelHeight) {
 	}
 
 	return mandelbrot;
-}
-
-int main() {
-	int pixelWidth = 800;
-	int pixelHeight = 600;
-
-	int* mandelbrot = vectorizedMandelbrot(pixelWidth, pixelHeight);
-	int* mandelbrot2 = unvectorizedMandelbrot(pixelWidth, pixelHeight);
-
-	return 0;
 }
