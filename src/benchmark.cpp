@@ -71,8 +71,12 @@ int main(int argc, char** args) {
 	float* bFloat = gererateFloatArray(size);
 
 	// tempsize is sqrt of size
-	int tempSize = sqrt(size);
 	int* mandelbrotResult = new int[800 * 600];
+
+	int* intResult = new int[size];
+	float* floatResult = new float[size];
+	int* mulRes = new int[size * size];
+	float* floatMulRes = new float[size * size];
 
 	for (int i = 0; i < EXPERIMENT_ITERATIONS; i++) {
 		auto start = std::chrono::high_resolution_clock::now();
@@ -80,15 +84,15 @@ int main(int argc, char** args) {
 		if (method == 3) vectorizedMandelbrot(800, 600, size, mandelbrotResult); // size = iterations
 
 		else if (isFloat == 0) {
-			if (method == 0) addMatrices(aInt, bInt, size);
+			if (method == 0) addMatrices(aInt, bInt, size, intResult);
 			if (method == 1) dotProduct(aInt, bInt, size);
-			if (method == 2) multiplyMatrices(aInt, tempSize, tempSize, bInt, tempSize, tempSize);
+			if (method == 2) multiplyMatrices(aInt, bInt, size, mulRes);
 		}
 
 		else {
-			if (method == 0) addMatrices(aFloat, bFloat, size);
+			if (method == 0) addMatrices(aFloat, bFloat, size, floatResult);
 			if (method == 1) dotProduct(aFloat, bFloat, size);
-			if (method == 2) multiplyMatrices(aFloat,tempSize, tempSize, bFloat, tempSize, tempSize);
+			if (method == 2) multiplyMatrices(aFloat, bFloat, size, floatMulRes);
 		}
 
 		auto end = std::chrono::high_resolution_clock::now();

@@ -53,6 +53,6 @@ int dotProduct(int* a, int* b, int size) {
 		result += a[i] * b[i];
 	}
 
-	return _mm_cvtsi128_si32(partialSum);
+	return result;
 
 }

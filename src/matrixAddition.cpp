@@ -2,9 +2,7 @@
 
 #include "../include/matrixAddition.h"
 
-float* addMatrices(float* matrixA, float* matrixB, int size) {
-	float* matrixResult = new float[size];
-
+void addMatrices(float* matrixA, float* matrixB, int size, float* matrixResult) {
 	int iterations = size / 4;
 	for (int i = 0; i < iterations; i++) {
 		__m128 a = _mm_loadu_ps(&matrixA[i]);
@@ -19,13 +17,9 @@ float* addMatrices(float* matrixA, float* matrixB, int size) {
 	for (int i = size - remainder; i < size; i++) {
 		matrixResult[i] = matrixA[i] + matrixB[i];
 	}
-
-	return matrixResult;
 }
 
-int* addMatrices(int* matrixA, int* matrixB, int size) {
-	int* matrixResult = new int[size];
-
+void addMatrices(int* matrixA, int* matrixB, int size, int* matrixResult) {
 	int iterations = size / 4;
 	for (int i = 0; i < iterations; i++) {
 		__m128i a = _mm_loadu_si128((__m128i*)&matrixA[i * 4]);
@@ -39,6 +33,4 @@ int* addMatrices(int* matrixA, int* matrixB, int size) {
 	for (int i = size - remainder; i < size; i++) {
 		matrixResult[i] = matrixA[i] + matrixB[i];
 	}
-
-	return matrixResult;
 }
