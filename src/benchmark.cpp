@@ -2,6 +2,7 @@
 #include <chrono>
 #include <cstring>
 #include <cmath>
+#include <fstream>
 
 #include "../include/helpers.h"
 #include "../include/matrixAddition.h"
@@ -11,50 +12,39 @@
 
 int EXPERIMENT_ITERATIONS = 25;
 
-void printResults(int* data, int size, int* a = nullptr, int* b = nullptr) {
-	std::cout << "Size: " << size << std::endl;
 
-	// print a if not null
-	if (a != nullptr) {
-		std::cout << "Matrix A: [" << std::endl;;
-		printArray(a, size);
-		std::cout << std::endl << "]" << std::endl;
+template <typename T>
+void writeToFile(int method, int isFloat, int size, T* a, T* b, int* data) {
+	std::string methods[] = {"matrixAddition", "dotProduct","matrixMultiplication", "mandelbrot"};
+	std::string f = (isFloat == 0) ? "i" : "f";
+
+	std::string filename = "results/" + methods[method] + "/" + f + "_" + std::to_string(size) + ".txt";
+	std::string dataFile = "testData/" + methods[method] + "/" + f + "_" + std::to_string(size) + ".txt";
+
+	if (method != 3) {
+		std::ofstream file(dataFile);
+
+		file << "A:" << std::endl;
+		for (int i = 0; i < size - 1; i++) {
+			file << a[i] << ",";
+		}
+		file << a[size - 1] << std::endl;
+
+		file << "B:" << std::endl;
+		for (int i = 0; i < size - 1; i++) {
+			file << b[i] << ",";
+		}
+		file << b[size - 1] << std::endl;
+		file.close();
 	}
 
-	// print b if not null
-	if (b != nullptr) {
-		std::cout << "Matrix B: [" << std::endl;
-		printArray(b, size);
-		std::cout << std::endl << "]" << std::endl;
+	std::ofstream file(filename);
+
+	for (int i = 0; i < EXPERIMENT_ITERATIONS - 1; i++) {
+		file << data[i] << ",";
 	}
-
-	// print benchmark
-	std::cout << "Benchmark: [" << std::endl;
-	printArray(data, EXPERIMENT_ITERATIONS);
-	std::cout << std::endl << "]" << std::endl;
-}
-
-void printResults(int* data, int size, float* a = nullptr, float* b = nullptr) {
-	std::cout << "Size: " << size << std::endl;
-
-	// print a if not null
-	if (a != nullptr) {
-		std::cout << "Matrix A: [" << std::endl;;
-		printArray(a, size);
-		std::cout << std::endl << "]" << std::endl;
-	}
-
-	// print b if not null
-	if (b != nullptr) {
-		std::cout << "Matrix B: [" << std::endl;
-		printArray(b, size);
-		std::cout << std::endl << "]" << std::endl;
-	}
-
-	// print benchmark
-	std::cout << "Benchmark: [" << std::endl;
-	printArray(data, EXPERIMENT_ITERATIONS);
-	std::cout << std::endl << "]" << std::endl;
+	file << data[EXPERIMENT_ITERATIONS - 1] << std::endl;
+	file.close();
 }
 
 int main(int argc, char** args) {
@@ -101,18 +91,17 @@ int main(int argc, char** args) {
 		data[i] = duration.count();
 	}
 
-
-	if (method == 3) printResults(data, size, (int*)nullptr, (int*)nullptr);
+	if (method == 3) writeToFile(method, isFloat, size, aInt, bInt, data);
 
 	else if (isFloat == 0) {
-		if (method == 0) printResults(data, size, aInt, bInt);
-		if (method == 1) printResults(data, size, aInt, bInt);
-		if (method == 2) printResults(data, size, aInt, bInt);
+		if (method == 0) writeToFile(method, isFloat, size, aInt, bInt, data);
+		if (method == 1) writeToFile(method, isFloat, size, aInt, bInt, data);
+		if (method == 2) writeToFile(method, isFloat, size, aInt, bInt, data);
 	}
 	else {
-		if (method == 0) printResults(data, size, aFloat, bFloat);
-		if (method == 1) printResults(data, size, aFloat, bFloat);
-		if (method == 2) printResults(data, size, aFloat, bFloat);
+		if (method == 0) writeToFile(method, isFloat, size, aFloat, bFloat, data);
+		if (method == 1) writeToFile(method, isFloat, size, aFloat, bFloat, data);
+		if (method == 2) writeToFile(method, isFloat, size, aFloat, bFloat, data);
 	}
 
 	return 0;
