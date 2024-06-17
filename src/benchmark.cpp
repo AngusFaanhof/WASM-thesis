@@ -54,11 +54,11 @@ int main(int argc, char** args) {
 	int size = atoi(args[2]);
 	bool isFloat = strcmp(args[3], "1") == 0;
 
-	int* aInt = generateIntArray(size);
-	int* bInt = generateIntArray(size);
+	int* aInt = generateIntArray(size * size);
+	int* bInt = generateIntArray(size * size);
 
-	float* aFloat = gererateFloatArray(size);
-	float* bFloat = gererateFloatArray(size);
+	float* aFloat = gererateFloatArray(size * size);
+	float* bFloat = gererateFloatArray(size * size);
 
 	// tempsize is sqrt of size
 	int* mandelbrotResult = new int[800 * 600];

@@ -47,48 +47,48 @@ float* gererateFloatArray(int size) {
 	return array;
 }
 
-void printResults(int* data, int size, int* a = nullptr, int* b = nullptr) {
-	std::cout << "Size: " << size << std::endl;
+// void printResults(int* data, int size, int* a = nullptr, int* b = nullptr) {
+// 	std::cout << "Size: " << size << std::endl;
 
-	// print a if not null
-	if (a != nullptr) {
-		std::cout << "Matrix A: [" << std::endl;;
-		printArray(a, size);
-		std::cout << std::endl << "]" << std::endl;
-	}
+// 	// print a if not null
+// 	if (a != nullptr) {
+// 		std::cout << "Matrix A: [" << std::endl;;
+// 		printArray(a, size);
+// 		std::cout << std::endl << "]" << std::endl;
+// 	}
 
-	// print b if not null
-	if (b != nullptr) {
-		std::cout << "Matrix B: [" << std::endl;
-		printArray(b, size);
-		std::cout << std::endl << "]" << std::endl;
-	}
+// 	// print b if not null
+// 	if (b != nullptr) {
+// 		std::cout << "Matrix B: [" << std::endl;
+// 		printArray(b, size);
+// 		std::cout << std::endl << "]" << std::endl;
+// 	}
 
-	// print benchmark
-	std::cout << "Benchmark: [" << std::endl;
-	printArray(data, EXPERIMENT_ITERATIONS);
-	std::cout << std::endl << "]" << std::endl;
-}
+// 	// print benchmark
+// 	std::cout << "Benchmark: [" << std::endl;
+// 	printArray(data, EXPERIMENT_ITERATIONS);
+// 	std::cout << std::endl << "]" << std::endl;
+// }
 
-void printResults(int* data, int size, float* a = nullptr, float* b = nullptr) {
-	std::cout << "Size: " << size << std::endl;
+// void printResults(int* data, int size, float* a = nullptr, float* b = nullptr) {
+// 	std::cout << "Size: " << size << std::endl;
 
-	// print a if not null
-	if (a != nullptr) {
-		std::cout << "Matrix A: [" << std::endl;;
-		printArray(a, size);
-		std::cout << std::endl << "]" << std::endl;
-	}
+// 	// print a if not null
+// 	if (a != nullptr) {
+// 		std::cout << "Matrix A: [" << std::endl;;
+// 		printArray(a, size);
+// 		std::cout << std::endl << "]" << std::endl;
+// 	}
 
-	// print b if not null
-	if (b != nullptr) {
-		std::cout << "Matrix B: [" << std::endl;
-		printArray(b, size);
-		std::cout << std::endl << "]" << std::endl;
-	}
+// 	// print b if not null
+// 	if (b != nullptr) {
+// 		std::cout << "Matrix B: [" << std::endl;
+// 		printArray(b, size);
+// 		std::cout << std::endl << "]" << std::endl;
+// 	}
 
-	// print benchmark
-	std::cout << "Benchmark: [" << std::endl;
-	printArray(data, EXPERIMENT_ITERATIONS);
-	std::cout << std::endl << "]" << std::endl;
-}
+// 	// print benchmark
+// 	std::cout << "Benchmark: [" << std::endl;
+// 	printArray(data, EXPERIMENT_ITERATIONS);
+// 	std::cout << std::endl << "]" << std::endl;
+// }
