@@ -14,58 +14,58 @@
 int EXPERIMENT_ITERATIONS = 25;
 
 template <typename T>
-void readFromFile(int method, int isFloat, int size, T** a, T** b) {
-	T* newA = new T[size * size];
-	T* newB = new T[size * size];
-
+void readFromFile(int method, int isFloat, int size, T* a, T* b) {
 	std::string methods[] = {"matrixAddition", "dotProduct","matrixMultiplication", "mandelbrot"};
 	std::string f = (isFloat == 0) ? "i" : "f";
 
 	std::string filename = "testData/" + methods[method] + "/" + f + "_" + std::to_string(size) + ".txt";
 
 	std::ifstream file(filename);
-
 	std::string line;
-	int i = 0;
-	while (std::getline(file, line)) {
-		if (line == "A:") {
-			std::getline(file, line);
-			std::stringstream ss(line);
-			std::string token;
-			while (std::getline(ss, token, ',')) {
-				newA[i] = isFloat ? std::stof(token) : std::stoi(token);
-				i++;
-			}
-		}
 
-		else if (line == "B:") {
-			std::getline(file, line);
-			std::stringstream ss(line);
-			std::string token;
-			while (std::getline(ss, token, ',')) {
-				newB[i] = isFloat ? std::stof(token) : std::stoi(token);
-				i++;
-			}
-		}
+	// read A:
+	std::getline(file, line);
+	std::getline(file, line);
+	std::istringstream iss(line);
+
+	int num;
+	int i = 0;
+	while (iss >> num) {
+		if (iss.peek() == ',') iss.ignore();
+
+		a[i] = num;
+		i++;
 	}
 
-	*a = newA;
-	*b = newB;
+	// read B:
+	std::getline(file, line);
+	std::getline(file, line);
+	std::istringstream iss2(line);
+
+	i = 0;
+	while (iss2 >> num) {
+		if (iss2.peek() == ',') iss2.ignore();
+
+		b[i] = num;
+		i++;
+	}
+
+	file.close();
 }
 
 void writeToFile(int method, int isFloat, int size, int* data) {
-	std::string methods[] = {"matrixAddition", "dotProduct","matrixMultiplication", "mandelbrot"};
-	std::string f = (isFloat == 0) ? "i" : "f";
+	// std::string methods[] = {"matrixAddition", "dotProduct","matrixMultiplication", "mandelbrot"};
+	// std::string f = (isFloat == 0) ? "i" : "f";
 
-	std::string filename = "results/" + methods[method] + "/" + f + "_" + std::to_string(size) + ".txt";
-	std::ofstream file(filename);
+	// std::string filename = "results/" + methods[method] + "/" + f + "_" + std::to_string(size) + ".txt";
+	// // std::ofstream file(filename);
 
 	for (int i = 0; i < EXPERIMENT_ITERATIONS - 1; i++) {
-		file << data[i] << ",";
+		std::cout << data[i] << ",";
 	}
-	file << data[EXPERIMENT_ITERATIONS - 1] << std::endl;
+	std::cout << data[EXPERIMENT_ITERATIONS - 1] << std::endl;
 
-	file.close();
+	// file.close();
 }
 
 int main(int argc, char** args) {
@@ -75,20 +75,22 @@ int main(int argc, char** args) {
 	int size = atoi(args[2]);
 	bool isFloat = strcmp(args[3], "1") == 0;
 
-	int* aInt = nullptr;
-	int* bInt = nullptr;
-	float* aFloat = nullptr;
-	float* bFloat = nullptr;
+	int* aInt = new int[size];
+	int* bInt = new int[size];
 
-	readFromFile(method, isFloat, size, &aInt, &bInt);
-	readFromFile(method, isFloat, size, &aFloat, &bFloat);
+	float* aFloat = new float[size];
+	float* bFloat = new float[size];
+
+	if (method == 3) int a = 1;
+	else if (isFloat == 0) readFromFile(method, isFloat, size, aInt, bInt);
+	else readFromFile(method, isFloat, size, aFloat, bFloat);
 
 	int* mandelbrotResult = new int[800 * 600];
 
 	int* intResult = new int[size];
 	float* floatResult = new float[size];
-	int* mulRes = new int[size * size];
-	float* floatMulRes = new float[size * size];
+	int* mulRes = new int[size];
+	float* floatMulRes = new float[size];
 
 	for (int i = 0; i < EXPERIMENT_ITERATIONS; i++) {
 		auto start = std::chrono::high_resolution_clock::now();
