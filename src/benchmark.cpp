@@ -53,71 +53,87 @@ void readFromFile(int method, int isFloat, int size, T* a, T* b) {
 	file.close();
 }
 
-void writeToFile(int method, int isFloat, int size, int* data) {
-	// std::string methods[] = {"matrixAddition", "dotProduct","matrixMultiplication", "mandelbrot"};
-	// std::string f = (isFloat == 0) ? "i" : "f";
-
-	// std::string filename = "results/" + methods[method] + "/" + f + "_" + std::to_string(size) + ".txt";
-	// // std::ofstream file(filename);
-
+void printResults(long long* data) {
 	for (int i = 0; i < EXPERIMENT_ITERATIONS - 1; i++) {
 		std::cout << data[i] << ",";
 	}
 	std::cout << data[EXPERIMENT_ITERATIONS - 1] << std::endl;
-
-	// file.close();
 }
 
-int main(int argc, char** args) {
-	int data[EXPERIMENT_ITERATIONS];
+void floatOperations(int method, int size, long long* data) {
+	float* a = new float[size];
+	float* b = new float[size];
 
-	int method = atoi(args[1]);
-	int size = atoi(args[2]);
-	bool isFloat = strcmp(args[3], "1") == 0;
+	readFromFile(method, 1, size, a, b);
 
-	int* aInt = new int[size];
-	int* bInt = new int[size];
-
-	float* aFloat = new float[size];
-	float* bFloat = new float[size];
-
-	if (method == 3) int a = 1;
-	else if (isFloat == 0) readFromFile(method, isFloat, size, aInt, bInt);
-	else readFromFile(method, isFloat, size, aFloat, bFloat);
-
-	int* mandelbrotResult = new int[800 * 600];
-
-	int* intResult = new int[size];
 	float* floatResult = new float[size];
-	int* mulRes = new int[size];
-	float* floatMulRes = new float[size];
 
 	for (int i = 0; i < EXPERIMENT_ITERATIONS; i++) {
 		auto start = std::chrono::high_resolution_clock::now();
 
-		if (method == 3) vectorizedMandelbrot(800, 600, size, mandelbrotResult); // size = iterations
-
-		else if (isFloat == 0) {
-			if (method == 0) addMatrices(aInt, bInt, size, intResult);
-			if (method == 1) dotProduct(aInt, bInt, size);
-			if (method == 2) multiplyMatrices(aInt, bInt, size, mulRes);
-		}
-
-		else {
-			if (method == 0) addMatrices(aFloat, bFloat, size, floatResult);
-			if (method == 1) dotProduct(aFloat, bFloat, size);
-			if (method == 2) multiplyMatrices(aFloat, bFloat, size, floatMulRes);
-		}
+		if (method == 0 || method == 2) addMatrices(a, b, size, floatResult);
+		if (method == 1) dotProduct(a, b, size);
+		if (method == 2) multiplyMatrices(a, b, size, floatResult);
 
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
 
 		data[i] = duration.count();
 	}
+}
 
-	if (method == 3) writeToFile(method, isFloat, size, data);
-	else if (isFloat == 0) writeToFile(method, isFloat, size, data);
-	else writeToFile(method, isFloat, size, data);
+void intOperations(int method, int size, long long* data) {
+	int* a = new int[size];
+	int* b = new int[size];
+
+	readFromFile(method, 0, size, a, b);
+
+	int* intResult = new int[size];
+
+	for (int i = 0; i < EXPERIMENT_ITERATIONS; i++) {
+		auto start = std::chrono::high_resolution_clock::now();
+
+		if (method == 0) addMatrices(a, b, size, intResult);
+		if (method == 1) dotProduct(a, b, size);
+		if (method == 2) multiplyMatrices(a, b, size, intResult);
+
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+
+		data[i] = duration.count();
+	}
+}
+
+void mandelbrotOperation(int size, long long* data) {
+	int* mandelbrotResult = new int[800 * 600];
+	for (int i = 0; i < EXPERIMENT_ITERATIONS; i++) {
+		auto start = std::chrono::high_resolution_clock::now();
+
+		vectorizedMandelbrot(800, 600, size, mandelbrotResult);
+
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+
+		data[i] = duration.count();
+	}
+}
+
+int main(int argc, char** args) {
+	long long* data = new long long[EXPERIMENT_ITERATIONS];
+
+	int method = atoi(args[1]);
+	int size = atoi(args[2]);
+	bool isFloat = strcmp(args[3], "1") == 0;
+
+	if (method == 3) {
+		mandelbrotOperation(size, data);
+	} else if (isFloat == 0) {
+		intOperations(method, size, data);
+	} else {
+		floatOperations(method, size, data);
+	}
+
+	printResults(data);
 
 	return 0;
 }

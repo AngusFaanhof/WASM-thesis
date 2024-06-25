@@ -1,79 +1,132 @@
-# method = ["dotProduct", "matrixAddition", "matrixMultiplicaiton", "mandelbrot"]
-# read ../results/{method}/i_64.txt
-# extract numbers as array
-# compute mean, median, std, min, max
-
-import numpy as np
-import os
-
-
-file_base = "../results/"
-methods = ["dotProduct", "matrixAddition", "matrixMultiplication", "mandelbrot"]
-use_float = False
-
-iterations = [64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288, 1048576]
-# iterations = [64, 128, 256, 512, 1024]
-
-files = []
-dot_product_base = file_base + methods[0] + "/i_"
-
-results = {}
-
-for i in iterations:
-	temp_file_name = dot_product_base + str(i) + ".txt"
-
-	with open(temp_file_name, "r") as f:
-		lines = f.readlines()
-
-	numbers = lines[0].strip().split(',')
-	numbers = [int(num) for num in numbers]
-
-	mean = np.mean(numbers)
-	median = np.median(numbers)
-	std = np.std(numbers)
-	minimum = np.min(numbers)
-	maximum = np.max(numbers)
-
-	results[i] = {
-		"mean": mean,
-		"median": median,
-		"std": std,
-		"minimum": minimum,
-		"maximum": maximum,
-		"iterations": i
-	}
-
-# print(results)
-
-# plot iterations vs mean
-
-import matplotlib.pyplot as plt
-# from matplotlib.ticker import ticklabel_format
-
-x = iterations
-y = [results[i]["median"] for i in iterations]
+import json
 
 import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
 
-data = {
-	"Iterations": x,
-	"Time (NS)": y
-}
+with open("results.json", "r") as file:
+	data = json.load(file)
 
-df = pd.DataFrame(data)
+# example access
+# data["wasmtime"]["dotProduct"]["int"]["64"]
+# "64": {
+# 	"mean": 179.08,
+# 	"std": 37.408688830270435,
+# 	"min": 160,
+# 	"max": 351,
+# 	"median": 170
+# },
 
-yerr = [results[i]["std"] for i in iterations]
-plt.errorbar(df["Iterations"], df["Time (NS)"], yerr=yerr, fmt='o', label='Time (NS)')
-# plt.plot(df["Iterations"], df["Time (NS)"], label='Time (NS)'
 
-# plt.scatter(df["Iterations"], df["Time (NS)"])
-plt.plot(df["Iterations"], df["Time (NS)"])
+methods = ["dotProduct", "mandelbrot", "matrixAddition", "matrixMultiplication"]
+runtimes = ["CPP", "wasmtime", "wasmer", "wavm"]
+data_types = ["int", "float"]
 
-plt.xscale("log")
-plt.yscale("log")
-plt.xticks(
-	iterations,
-    ['64', '128', '256', '512', '1K', '2K', '4K', '8K', '16K', '32K', '64K', '128K', '256K', '512K', '1M']
-)
-plt.legend()
-plt.show()
+method_idx = 3
+
+method = methods[method_idx]
+datatype = "int"
+metric = "Median"
+
+def process_data(data, language, algorithm, data_type):
+	records = []
+	for iteration_n, stats in data[language][algorithm][data_type].items():
+		# if int(iteration_n) < 4000:
+		# 	continue
+
+		record = {
+			'Runtime': language,
+			'Algorithm': algorithm,
+			'DataType': data_type,
+			'Iteration': int(iteration_n),
+			'Mean': stats['mean'],
+			'Std': stats['std'],
+			'Min': stats['min'],
+			'Max': stats['max'],
+			'Median': stats['median']
+		}
+		records.append(record)
+
+	return records
+
+def plot(data, method, datatype, metric):
+	cpp_records = process_data(data, 'CPP', method, datatype)
+	wasmtime_records = process_data(data, 'wasmtime', method, datatype)
+	wasmer_records = process_data(data, 'wasmer', method, datatype)
+	wavm_records = process_data(data, 'wavm', method, datatype)
+
+	df = pd.DataFrame(cpp_records + wasmtime_records + wasmer_records + wavm_records)
+
+	start_y = cpp_records[0][metric]
+	y_values = [start_y * 5**i for i in range(4)]
+
+
+	print(y_values)
+
+	# error bars
+	means = df.pivot_table(index='Iteration', columns='Runtime', values=metric, aggfunc="mean")
+	stds = df.pivot_table(index='Iteration', columns='Runtime', values='Std', aggfunc="mean")
+
+	# Plotting
+	fig, ax = plt.subplots(figsize=(10, 6))
+
+	# Number of groups and bar width
+	n_groups = len(means.index)
+	bar_width = 0.2
+	index = np.arange(n_groups)
+
+	for i, runtime in enumerate(means.columns):
+		ax.bar(index + i*bar_width, means[runtime], yerr=stds[runtime], width=bar_width, label=runtime)
+
+	ax.set_xlabel('Size')
+	ax.set_ylabel(f'{metric} Execution Time')
+	ax.set_title(f'{metric} Execution Time by Runtime and Iteration with Std Error')
+	ax.set_xticks(index + bar_width / 2)
+	ax.set_xticklabels(means.index)
+	ax.set_yscale('log', base=2)
+	ax.legend()
+
+	# ax.plot(index, y_values, label='wasmtime trend', marker='o', linestyle='-', color='red')
+
+
+	plt.xticks(rotation=90)
+
+	plt.tight_layout()
+	plt.show()
+
+plot(data, method, datatype, metric)
+
+# cpp_records = process_data(data, 'CPP', method, datatype)
+# wasmtime_records = process_data(data, 'wasmtime', method, datatype)
+# wasmer_records = process_data(data, 'wasmer', method, datatype)
+# wavm_records = process_data(data, 'wavm', method, datatype)
+
+# df = pd.DataFrame(cpp_records + wasmtime_records + wasmer_records + wavm_records)
+
+# means = df.pivot_table(index='Iteration', columns='Runtime', values=metric, aggfunc="mean")
+# stds = df.pivot_table(index='Iteration', columns='Runtime', values='Std', aggfunc="mean")
+
+# # Plotting
+# fig, ax = plt.subplots(figsize=(10, 6))
+
+# # Number of groups and bar width
+# n_groups = len(means.index)
+# bar_width = 0.2
+# index = np.arange(n_groups)
+
+# for i, runtime in enumerate(means.columns):
+#     ax.bar(index + i*bar_width, means[runtime], yerr=stds[runtime], width=bar_width, label=runtime)
+
+# ax.set_xlabel('Iteration')
+# ax.set_ylabel('Median Execution Time')
+# ax.set_title('Median Execution Time by Runtime and Iteration with Std Error')
+# ax.set_xticks(index + bar_width / 2)
+# ax.set_xticklabels(means.index)
+# ax.set_yscale('log', base=2)
+# ax.legend()
+
+# plt.xticks(rotation=90)
+
+# plt.tight_layout()
+# plt.show()

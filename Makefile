@@ -3,7 +3,7 @@
 # Compiler settings
 CXX = g++
 EMCC = em++
-CXXFLAGS = -mavx2 -g -Wall -pedantic
+CXXFLAGS = -mavx -g -Wall -pedantic
 EMCCFLAGS = -mavx -msimd128
 
 # Source files

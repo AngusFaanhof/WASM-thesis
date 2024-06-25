@@ -10,8 +10,6 @@ float IMAGINARY_MIN = -1.5;
 float IMAGINARY_MAX = 1.5;
 
 void vectorizedMandelbrot(int pixelWidth, int pixelHeight, int maxIterations, int* mandelbrot) {
-	// int* mandelbrot = new int[pixelWidth * pixelHeight];
-
 	float xScale = (REAL_MAX - REAL_MIN) / pixelWidth;
 	float yScale = (IMAGINARY_MAX - IMAGINARY_MIN) / pixelHeight;
 
@@ -57,6 +55,4 @@ void vectorizedMandelbrot(int pixelWidth, int pixelHeight, int maxIterations, in
 			_mm_storeu_si128((__m128i*)&mandelbrot[(y * pixelWidth) + x], numIterations);
 		}
 	}
-
-	// return mandelbrot;
 }

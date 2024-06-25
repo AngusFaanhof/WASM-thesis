@@ -4,27 +4,23 @@
 
 #include "../include/matrixMultiplication.h"
 
-void multiplyMatrices(int* matrixA, int* matrixB, int rowsCols, int* matrixResult) {
-	int rows = sqrt(rowsCols);
-	int iterations = rows / 4;
+void multiplyMatrices(int* matrixA, int* matrixB, int size, int* matrixResult) {
+	int rows = sqrt(size);
+	int cols = rows;
+	int iterations = rows / 4; // iterations per row
 
 	for (int aI = 0; aI < rows; aI++) {
-		for (int bI = 0; bI < rows; bI++) {
+		for (int bI = 0; bI < cols; bI++) {
 
 			int indexSum = 0;
 			for (int k = 0; k < iterations; k++) {
 				__m128i a = _mm_load_si128((__m128i*)&matrixA[(aI + k) * 4]);
-				__m128i b = _mm_load_si128((__m128i*)&matrixB[(bI + k) * 4]);
+				__m128i b = _mm_load_si128((__m128i*)&matrixB[(bI + k) * 4]); // assume b is transposed
 
 				__m128i mul = _mm_mullo_epi32(a, b);
 
-				__m128i partialSum = _mm_setzero_si128();
-				partialSum = _mm_add_epi32(partialSum, mul);
-
-				partialSum = _mm_hadd_epi32(partialSum, partialSum);
-				partialSum = _mm_hadd_epi32(partialSum, partialSum);
-
-				indexSum += _mm_cvtsi128_si32(partialSum);
+				int* regValues = (int*)&mul;
+				indexSum += regValues[0] + regValues[1] + regValues[2] + regValues[3];
 			}
 
 			matrixResult[aI * rows + bI] = indexSum;
@@ -32,12 +28,13 @@ void multiplyMatrices(int* matrixA, int* matrixB, int rowsCols, int* matrixResul
 	}
 }
 
-void multiplyMatrices(float* matrixA, float* matrixB, int rowsCols, float* matrixResult) {
-	int rows = sqrt(rowsCols);
-	int iterations = rows / 4;
+void multiplyMatrices(float* matrixA, float* matrixB, int size, float* matrixResult) {
+	int rows = sqrt(size);
+	int cols = rows;
+	int iterations = rows / 4; // iterations per row
 
 	for (int aI = 0; aI < rows; aI++) {
-		for (int bI = 0; bI < rows; bI++) {
+		for (int bI = 0; bI < cols; bI++) {
 
 			int indexSum = 0;
 			for (int k = 0; k < iterations; k++) {
@@ -46,13 +43,8 @@ void multiplyMatrices(float* matrixA, float* matrixB, int rowsCols, float* matri
 
 				__m128 mul = _mm_mul_ps(a, b);
 
-				__m128 partialSum = _mm_setzero_ps();
-				partialSum = _mm_add_ps(partialSum, mul);
-
-				partialSum = _mm_hadd_ps(partialSum, partialSum);
-				partialSum = _mm_hadd_ps(partialSum, partialSum);
-
-				indexSum += _mm_cvtss_f32(partialSum);
+				float* regValues = (float*)&mul;
+				indexSum += regValues[0] + regValues[1] + regValues[2] + regValues[3];
 			}
 
 			matrixResult[aI * rows + bI] = indexSum;
