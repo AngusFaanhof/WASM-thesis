@@ -1,195 +1,155 @@
 #!/bin/bash
 
-# Array of sizes
-sizes=(64 128 256 512 1024 2048 4096 8192 16384 32768 65536 131072 262144 524288)
-sizes2=(16 64 256 1024 4096 16384 65536 262144) # 1048576)
-sizesm=(16 32 64 128 256 512 1024 2048 4096) # 4096)
+add_dot_sizes=(16 32 64 128 256 512 1024 2048 4096 8192 16384 32768 65536 131072 262144 524288)
+matrix_mult_sizes=(16 64 256 1024 4096 16384 65536 262144 1048576)
+mandelbrot_iterations=(16 32 64 128 256 512 1024 2048 4096)
 
-runtimes=(wasmer wasmtime)
+# matrixAddition
+{
+	for size in ${add_dot_sizes[@]}; do
+		# int
+		{
+			# cpp
+			./benchmark 0 $size 0 >> "results/CPP/matrixAddition_i.csv"
+			echo "cpp matrixAddition -int $size"
 
-# runtimes = (wasmer wasmtime)
+			# wasmer
+			wasmer ./benchmark.wasm 0 $size 0 >> "results/wasmer/matrixAddition_i.csv"
+			echo "wasmer matrixAddition -int $size"
 
-# for size in ${sizes[@]}; do
-# 	# matrix addition
-# 	# dotProduct
+			# wasmtime
+			wasmtime ./benchmark.wasm 0 $size 0 >> "results/wasmtime/matrixAddition_i.csv"
+			echo "wasmtime matrixAddition -int $size"
 
-# 	for runtime in ${runtimes[@]}; do
+			# wavm
+			wavm run ./benchmark.wasm 0 $size 0 >> "results/wavm/matrixAddition_i.csv"
+			echo "wavm matrixAddition -int $size"
+		}
+
+		# float
+		{
+			# cpp
+			./benchmark 0 $size 1 >> "results/CPP/matrixAddition_f.csv"
+			echo "cpp matrixAddition -float $size"
+
+			# wasmer
+			wasmer ./benchmark.wasm 0 $size 1 >> "results/wasmer/matrixAddition_f.csv"
+			echo "wasmer matrixAddition -float $size"
+
+			# wasmtime
+			wasmtime ./benchmark.wasm 0 $size 1 >> "results/wasmtime/matrixAddition_f.csv"
+			echo "wasmtime matrixAddition -float $size"
+
+			# wavm
+			wavm run ./benchmark.wasm 0 $size 1 >> "results/wavm/matrixAddition_f.csv"
+			echo "wavm matrixAddition -float $size"
+		}
+	done
+}
+
+# # dotProduct
+# {
+# 	for size in ${add_dot_sizes[@]}; do
 # 		# int
-# 		$runtime ./benchmark.wasm 0 $size 0 >> "results/$runtime/matrixAddition_i.csv"
-# 		echo "matrixAddition $size $runtime -int done"
+# 		{
+# 			# cpp
+# 			./benchmark 1 $size 0 >> "results/CPP/dotProduct_i.csv"
+# 			echo "cpp dotProduct -int $size"
 
-# 		$runtime ./benchmark.wasm 1 $size 0 >> "results/$runtime/dotProduct_i.csv"
-# 		echo "dotProduct $size $runtime -int done"
+# 			# wasmer
+# 			wasmer ./benchmark.wasm 1 $size 0 >> "results/wasmer/dotProduct_i.csv"
+# 			echo "wasmer dotProduct -int $size"
+
+# 			# wasmtime
+# 			wasmtime ./benchmark.wasm 1 $size 0 >> "results/wasmtime/dotProduct_i.csv"
+# 			echo "wasmtime dotProduct -int $size"
+
+# 			# wavm
+# 			wavm run ./benchmark.wasm 1 $size 0 >> "results/wavm/dotProduct_i.csv"
+# 			echo "wavm dotProduct -int $size"
+# 		}
 
 # 		# float
-# 		$runtime ./benchmark.wasm 0 $size 1 >> "results/$runtime/matrixAddition_f.csv"
-# 		echo "matrixAddition $size $runtime -float done"
+# 		{
+# 			# cpp
+# 			./benchmark 1 $size 1 >> "results/CPP/dotProduct_f.csv"
+# 			echo "cpp dotProduct -float $size"
 
-# 		$runtime ./benchmark.wasm 1 $size 1 >> "results/$runtime/dotProduct_f.csv"
-# 		echo "dotProduct $size $runtime -float done"
+# 			# wasmer
+# 			wasmer ./benchmark.wasm 1 $size 1 >> "results/wasmer/dotProduct_f.csv"
+# 			echo "wasmer dotProduct -float $size"
+
+# 			# wasmtime
+# 			wasmtime ./benchmark.wasm 1 $size 1 >> "results/wasmtime/dotProduct_f.csv"
+# 			echo "wasmtime dotProduct -float $size"
+
+# 			# wavm
+# 			wavm run ./benchmark.wasm 1 $size 1 >> "results/wavm/dotProduct_f.csv"
+# 			echo "wavm dotProduct -float $size"
+# 		}
 # 	done
-
-# 	# int
-# 	./benchmark 0 $size 0 >> "results/CPP/matrixAddition_i.csv"
-# 	echo "matrixAddition $size cpp -int done"
-
-# 	./benchmark 1 $size 0 >> "results/CPP/dotProduct_i.csv"
-# 	echo "dotProduct $size cpp -int done"
-
-# 	wavm run ./benchmark.wasm 0 $size 0 >> "results/wavm/matrixAddition_i.csv"
-# 	echo "matrixAddition $size wavm -int done"
-
-# 	wavm run ./benchmark.wasm 1 $size 0 >> "results/wavm/dotProduct_i.csv"
-# 	echo "dotProduct $size wavm -int done"
-
-# 	# float
-# 	./benchmark 0 $size 1 >> "results/CPP/matrixAddition_f.csv"
-# 	echo "matrixAddition $size cpp -float done"
-
-# 	./benchmark 1 $size 1 >> "results/CPP/dotProduct_f.csv"
-# 	echo "dotProduct $size cpp -float done"
-
-# 	wavm run ./benchmark.wasm 0 $size 1 >> "results/wavm/matrixAddition_f.csv"
-# 	echo "matrixAddition $size wavm -float done"
-
-# 	wavm run ./benchmark.wasm 1 $size 1 >> "results/wavm/dotProduct_f.csv"
-# 	echo "dotProduct $size wavm -float done"
-# done
-
-for size in ${sizes2[@]}; do
-	# matrix multiplication
-
-	for runtime in ${runtimes[@]}; do
-		# int
-		$runtime ./benchmark.wasm 2 $size 0 >> "results/$runtime/matrixMultiplication_i.csv"
-		echo "matrixMultiplication $size $runtime -int done"
-
-		$runtime ./benchmark.wasm 2 $size 1 >> "results/$runtime/matrixMultiplication_f.csv"
-		echo "matrixMultiplication $size $runtime -float done"
-	done
-
-	# int
-	./benchmark 2 $size 0 >> "results/CPP/matrixMultiplication_i.csv"
-	echo "matrixMultiplication $size cpp -int done"
-
-	wavm run ./benchmark.wasm 2 $size 0 >> "results/wavm/matrixMultiplication_i.csv"
-	echo "matrixMultiplication $size wavm -int done"
-
-	# float
-	./benchmark 2 $size 1 >> "results/CPP/matrixMultiplication_f.csv"
-	echo "matrixMultiplication $size cpp -float done"
-
-	wavm run ./benchmark.wasm 2 $size 1 >> "results/wavm/matrixMultiplication_f.csv"
-	echo "matrixMultiplication $size wavm -float done"
-done
-
-# for size in ${sizesm[@]}; do
-# 	# mandelbrot
-
-# 	for runtime in ${runtimes[@]}; do
-# 		$runtime ./benchmark.wasm 3 $size 0 >> "results/$runtime/mandelbrot.csv"
-# 		echo "mandelbrot $size $runtime done"
-# 	done
-
-# 	./benchmark 3 $size 0 >> "results/CPP/mandelbrot.csv"
-# 	echo "mandelbrot $size cpp done"
-
-# 	wavm run ./benchmark.wasm 3 $size 0 >> "results/wavm/mandelbrot.csv"
-# 	echo "mandelbrot $size wavm done"
-# done
-
-# Loop over sizes
-# for size in "${sizes[@]}"; do
-# 	./benchmark 0 $size 0 0
-# done
-
-
-# WASM
-
-# INT
-# matrixAddition
-# {
-	# for size in "${sizes[@]}"; do
-	# 	wavm run ./benchmark.wasm 0 $size 0 >> "results/wavm/matrixAddition.csv"
-	# done
-
-	# # dotProduct
-	# for size in "${sizes[@]}"; do
-	# 	wavm run ./benchmark.wasm 1 $size 0 >> "results/wavm/dotProduct.csv"
-	# done
-
-	# # matrixMultiplicaiton
-	# for size in "${sizes2[@]}"; do
-	# 	wavm run ./benchmark.wasm 2 $size 0 >> "results/wavm/matrixMultiplication.csv"
-	# done
-
-	# # mandelbrot
-	# for size in "${sizesm[@]}"; do
-	# 	wavm run ./benchmark.wasm 3 $size 0 >> "results/wavm/mandelbrot.csv"
-	# done
-
-	# # FLOAT
-
-	# # matrixAddition
-	# for size in "${sizes[@]}"; do
-	# 	wavm run ./benchmark.wasm 0 $size 1 >> "results/wavm/matrixAddition.csv"
-	# done
-
-	# # dotProduct
-	# for size in "${sizes[@]}"; do
-	# 	wavm run ./benchmark.wasm 1 $size 1 >> "results/wavm/dotProduct.csv"
-	# done
-
-	# # matrixMultiplicaiton
-	# for size in "${sizes2[@]}"; do
-	# 	wavm run ./benchmark.wasm 2 $size 1 >> "results/wavm/matrixMultiplication.csv"
-	# done
 # }
-# CPP
 
+# # matrixMultiplication
 # {
-# 	# INT
-# 	# matrixAddition
-# 	for size in "${sizes[@]}"; do
-# 		./benchmark 0 $size 0 0 >> "results/CPP/matrixAddition.csv"
-# 		echo "matrixAddition $size done"
+# 	for size in ${matrix_mult_sizes[@]}; do
+# 		# int
+# 		{
+# 			# cpp
+# 			./benchmark 2 $size 0 >> "results/CPP/matrixMultiplication_i.csv"
+# 			echo "cpp matrixMultiplication -int $size"
+
+# 			# wasmer
+# 			wasmer ./benchmark.wasm 2 $size 0 >> "results/wasmer/matrixMultiplication_i.csv"
+# 			echo "wasmer matrixMultiplication -int $size"
+
+# 			# wasmtime
+# 			wasmtime ./benchmark.wasm 2 $size 0 >> "results/wasmtime/matrixMultiplication_i.csv"
+# 			echo "wasmtime matrixMultiplication -int $size"
+
+# 			# wavm
+# 			wavm run ./benchmark.wasm 2 $size 0 >> "results/wavm/matrixMultiplication_i.csv"
+# 			echo "wavm matrixMultiplication -int $size"
+# 		}
+
+# 		# float
+# 		{
+# 			# cpp
+# 			./benchmark 2 $size 1 >> "results/CPP/matrixMultiplication_f.csv"
+# 			echo "cpp matrixMultiplication -float $size"
+
+# 			# wasmer
+# 			wasmer ./benchmark.wasm 2 $size 1 >> "results/wasmer/matrixMultiplication_f.csv"
+# 			echo "wasmer matrixMultiplication -float $size"
+
+# 			# wasmtime
+# 			wasmtime ./benchmark.wasm 2 $size 1 >> "results/wasmtime/matrixMultiplication_f.csv"
+# 			echo "wasmtime matrixMultiplication -float $size"
+
+# 			# wavm
+# 			wavm run ./benchmark.wasm 2 $size 1 >> "results/wavm/matrixMultiplication_f.csv"
+# 			echo "wavm matrixMultiplication -float $size"
+# 		}
 # 	done
+# }
 
-# 	# dotProduct
-# 	for size in "${sizes[@]}"; do
-# 		./benchmark 1 $size 0 0 >> "results/CPP/dotProduct.csv"
-# 		echo "dotProduct $size done"
-# 	done
+# # mandelbrot
+# {
+# 	for size in ${mandelbrot_iterations[@]}; do
+# 		# cpp
+# 		./benchmark 3 $size 0 >> "results/CPP/mandelbrot.csv"
+# 		echo "cpp mandelbrot $size"
 
-# 	# matrixMultiplicaiton
-# 	for size in "${sizes2[@]}"; do
-# 		./benchmark 2 $size 0 0 >> "results/CPP/matrixMultiplication.csv"
-# 		echo "matrixMultiplication $size done"
-# 	done
+# 		# wasmer
+# 		wasmer ./benchmark.wasm 3 $size 0 >> "results/wasmer/mandelbrot.csv"
+# 		echo "wasmer mandelbrot $size"
 
-# 	# mandelbrot
-# 	for size in "${sizesm[@]}"; do
-# 		./benchmark 3 $size 0 0 >> "results/CPP/mandelbrot.csv"
-# 		echo "mandelbrot $size done"
-# 	done
+# 		# wasmtime
+# 		wasmtime ./benchmark.wasm 3 $size 0 >> "results/wasmtime/mandelbrot.csv"
+# 		echo "wasmtime mandelbrot $size"
 
-# 	# FLOAT
-
-# 	# matrixAddition
-# 	for size in "${sizes[@]}"; do
-# 		./benchmark 0 $size 1 0 >> "results/CPP/matrixAddition.csv"
-# 		echo "matrixAddition $size done"
-# 	done
-
-# 	# dotProduct
-# 	for size in "${sizes[@]}"; do
-# 		./benchmark 1 $size 1 0 >> "results/CPP/dotProduct.csv"
-# 		echo "dotProduct $size done"
-# 	done
-
-# 	# matrixMultiplicaiton
-# 	for size in "${sizes2[@]}"; do
-# 		./benchmark 2 $size 1 0 >> "results/CPP/matrixMultiplication.csv"
-# 		echo "matrixMultiplication $size done"
+# 		# wavm
+# 		wavm run ./benchmark.wasm 3 $size 0 >> "results/wavm/mandelbrot.csv"
+# 		echo "wavm mandelbrot $size"
 # 	done
 # }

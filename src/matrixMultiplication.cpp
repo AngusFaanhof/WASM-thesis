@@ -13,6 +13,7 @@ void multiplyMatrices(int* matrixA, int* matrixB, int size, int* matrixResult) {
 		for (int bI = 0; bI < cols; bI++) {
 
 			int indexSum = 0;
+			// __m128i sum = _mm_setzero_si128();
 			for (int k = 0; k < iterations; k++) {
 				__m128i a = _mm_load_si128((__m128i*)&matrixA[(aI + k) * 4]);
 				__m128i b = _mm_load_si128((__m128i*)&matrixB[(bI + k) * 4]); // assume b is transposed
@@ -51,3 +52,4 @@ void multiplyMatrices(float* matrixA, float* matrixB, int size, float* matrixRes
 		}
 	}
 }
+

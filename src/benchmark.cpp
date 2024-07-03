@@ -11,7 +11,7 @@
 #include "../include/matrixMultiplication.h"
 #include "../include/mandelbrot.h"
 
-int EXPERIMENT_ITERATIONS = 25;
+int EXPERIMENT_ITERATIONS = 100;
 
 template <typename T>
 void readFromFile(int method, int isFloat, int size, T* a, T* b) {
