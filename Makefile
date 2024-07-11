@@ -23,6 +23,3 @@ cpp:
 
 wasm:
 	$(EMCC) $(EMCCFLAGS) -o $(OUT_WASM) $(SRCS)
-
-ccopy: cpp
-	./$(OUT_CPP) | xclip -selection clipboard
