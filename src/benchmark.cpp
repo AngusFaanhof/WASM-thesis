@@ -1,5 +1,9 @@
 #include <iostream>
 #include <chrono>
+#include <cstring>
+#include <cmath>
+#include <fstream>
+#include <sstream>
 
 #include "../include/helpers.h"
 #include "../include/matrixAddition.h"
@@ -7,82 +11,129 @@
 #include "../include/matrixMultiplication.h"
 #include "../include/mandelbrot.h"
 
-int EXPERIMENT_ITERATIONS = 25;
+int EXPERIMENT_ITERATIONS = 100;
 
-void printResults(int* data, int size, int* a = nullptr, int* b = nullptr) {
-	std::cout << "Size: " << size << std::endl;
+template <typename T>
+void readFromFile(int method, int isFloat, int size, T* a, T* b) {
+	std::string methods[] = {"matrixAddition", "dotProduct","matrixMultiplication", "mandelbrot"};
+	std::string f = (isFloat == 0) ? "i" : "f";
 
-	// print a if not null
-	if (a != nullptr) {
-		std::cout << "Matrix A: [";
-		printArray(a, size);
-		std::cout << "]" << std::endl;
+	std::string filename = "testData/" + methods[method] + "/" + f + "_" + std::to_string(size) + ".txt";
+
+	std::ifstream file(filename);
+	std::string line;
+
+	// read A:
+	std::getline(file, line);
+	std::getline(file, line);
+	std::istringstream iss(line);
+
+	int num;
+	int i = 0;
+	while (iss >> num) {
+		if (iss.peek() == ',') iss.ignore();
+
+		a[i] = num;
+		i++;
 	}
 
-	// print b if not null
-	if (b != nullptr) {
-		std::cout << "Matrix B: [";
-		printArray(b, size);
-		std::cout << "]" << std::endl;
+	// read B:
+	std::getline(file, line);
+	std::getline(file, line);
+	std::istringstream iss2(line);
+
+	i = 0;
+	while (iss2 >> num) {
+		if (iss2.peek() == ',') iss2.ignore();
+
+		b[i] = num;
+		i++;
 	}
 
-	// print benchmark
-	for (int i = 0; i < EXPERIMENT_ITERATIONS; i++) {
-		std::cout << i << ": " << data[i] << "Ms" << std::endl;
-	}
+	file.close();
 }
 
-void printResults(int* data, int size, float* a = nullptr, float* b = nullptr) {
-	std::cout << "Size: " << size << std::endl;
-
-	// print a if not null
-	if (a != nullptr) {
-		std::cout << "Matrix A: [";
-		printArray(a, size);
-		std::cout << "]" << std::endl;
+void printResults(long long* data) {
+	for (int i = 0; i < EXPERIMENT_ITERATIONS - 1; i++) {
+		std::cout << data[i] << ",";
 	}
-
-	// print b if not null
-	if (b != nullptr) {
-		std::cout << "Matrix B: [";
-		printArray(b, size);
-		std::cout << "]" << std::endl;
-	}
-
-	// print benchmark
-	for (int i = 0; i < EXPERIMENT_ITERATIONS; i++) {
-		std::cout << i << ": " << data[i] << "Ms" << std::endl;
-	}
+	std::cout << data[EXPERIMENT_ITERATIONS - 1] << std::endl;
 }
 
-int main(int argc, char** args) {
-	int data[EXPERIMENT_ITERATIONS];
+void floatOperations(int method, int size, long long* data) {
+	float* a = new float[size];
+	float* b = new float[size];
 
-	int size = 500;
+	readFromFile(method, 1, size, a, b);
 
-	int* aInt = generateIntArray(size);
-	int* bInt = generateIntArray(size);
-
-	float* aFloat = gererateFloatArray(size);
-	float* bFloat = gererateFloatArray(size);
+	float* floatResult = new float[size];
 
 	for (int i = 0; i < EXPERIMENT_ITERATIONS; i++) {
 		auto start = std::chrono::high_resolution_clock::now();
 
-		addMatrices(aInt, bInt, 100);
-		// dotProduct(a,b, size);
-		// multiplyMatrices(a, size, size, b, size, size);
-		// vectorizedMandelbrot(800, 600, size);
+		if (method == 0 || method == 2) addMatrices(a, b, size, floatResult);
+		if (method == 1) dotProduct(a, b, size);
+		if (method == 2) multiplyMatrices(a, b, size, floatResult);
 
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
 
 		data[i] = duration.count();
 	}
+}
 
-	// printResults(data, size, aFloat, bFloat);
-	printResults(data, size, aInt, bInt);
-	// printResults(data, size);
+void intOperations(int method, int size, long long* data) {
+	int* a = new int[size];
+	int* b = new int[size];
+
+	readFromFile(method, 0, size, a, b);
+
+	int* intResult = new int[size];
+
+	for (int i = 0; i < EXPERIMENT_ITERATIONS; i++) {
+		auto start = std::chrono::high_resolution_clock::now();
+
+		if (method == 0) addMatrices(a, b, size, intResult);
+		if (method == 1) dotProduct(a, b, size);
+		if (method == 2) multiplyMatrices(a, b, size, intResult);
+
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+
+		data[i] = duration.count();
+	}
+}
+
+void mandelbrotOperation(int size, long long* data) {
+	int* mandelbrotResult = new int[800 * 600];
+	for (int i = 0; i < EXPERIMENT_ITERATIONS; i++) {
+		auto start = std::chrono::high_resolution_clock::now();
+
+		vectorizedMandelbrot(800, 600, size, mandelbrotResult);
+
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+
+		data[i] = duration.count();
+	}
+}
+
+int main(int argc, char** args) {
+	long long* data = new long long[EXPERIMENT_ITERATIONS];
+
+	int method = atoi(args[1]);
+	int size = atoi(args[2]);
+	bool isFloat = strcmp(args[3], "1") == 0;
+
+	if (method == 3) {
+		mandelbrotOperation(size, data);
+	} else if (isFloat == 0) {
+		intOperations(method, size, data);
+	} else {
+		floatOperations(method, size, data);
+	}
+
+	printResults(data);
 
 	return 0;
 }

@@ -2,8 +2,8 @@
 #ifndef MATRIX_MULTIPLICATION_H
 #define MATRIX_MULTIPLICATION_H
 
-int* multiplyMatrices(int* matrixA, int rowsA, int colsA, int* matrixB, int rowsB, int colsB);
+void multiplyMatrices(int* matrixA, int* matrixB, int rowsCols, int* matrixResult);
 
-float* multiplyMatrices(float* matrixA, int rowsA, int colsA, float* matrixB, int rowsB, int colsB);
+void multiplyMatrices(float* matrixA, float* matrixB, int rowsCols, float* matrixResult);
 
 #endif // MATRIX_MULTIPLICATION_H

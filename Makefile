@@ -3,7 +3,7 @@
 # Compiler settings
 CXX = g++
 EMCC = em++
-CXXFLAGS = -mavx
+CXXFLAGS = -mavx -g -Wall -pedantic
 EMCCFLAGS = -mavx -msimd128
 
 # Source files
@@ -23,6 +23,3 @@ cpp:
 
 wasm:
 	$(EMCC) $(EMCCFLAGS) -o $(OUT_WASM) $(SRCS)
-
-ccopy: cpp
-	./$(OUT_CPP) | xclip -selection clipboard

@@ -2,8 +2,8 @@
 #ifndef MATRIX_ADDITION_H
 #define MATRIX_ADDITION_H
 
-float* addMatrices(float* matrixA, float* matrixB, int size);
+void addMatrices(float* matrixA, float* matrixB, int size, float* matrixResult);
 
-int* addMatrices(int* matrixA, int* matrixB, int size);;
+void addMatrices(int* matrixA, int* matrixB, int size, int* matrixResult);
 
 #endif // MATRIX_ADDITION_H
