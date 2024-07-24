@@ -363,7 +363,7 @@ def print_scale_table(metric, datatype, stats, method, iterations):
     # print(f"| {method} {datatype} {metric} scaling relative to previous iteration")
     print(tabulate(data, headers=headers, tablefmt="latex", floatfmt=".2f"))
 
-print_scale_table("std", "int", stats, "mandelbrot", mandel_iterations)
+# print_scale_table("std", "int", stats, "mandelbrot", mandel_iterations)
 # method = "dotProduct"
 # print_scale_table("std", "int", stats, method, iterations)
 # print_scale_table("std", "float", stats, method, iterations)
