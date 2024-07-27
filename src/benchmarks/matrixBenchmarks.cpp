@@ -22,27 +22,74 @@ int main() {
 		16, 32, 64
 	};
 
-	for (auto size : sizes) {
-		MatrixF dataFA(size, size, generateRandomVector<float>(size * size, 0.0f, 1.0f));
-		MatrixF dataFB(size, size, generateRandomVector<float>(size * size, 0.0f, 1.0f));
-		MatrixI dataIA(size, size, generateRandomVector<int>(size * size, 0, 1000));
-		MatrixI dataIB(size, size, generateRandomVector<int>(size * size, 0, 1000));
+	std::vector<std::vector<float>> floatMatricesA;
+    std::vector<std::vector<float>> floatMatricesB;
+    std::vector<std::vector<int>> intMatricesA;
+    std::vector<std::vector<int>> intMatricesB;
+
+	for (int i = 0; i < sizes.size(); i++) {
+		size_t size = sizes.at(i);
+
+		std::vector<float> matrixFA = generateRandomVector<float>(size * size, 0.0f, 1.0f);
+		std::vector<float> matrixFB = generateRandomVector<float>(size * size, 0.0f, 1.0f);
+		std::vector<int> matrixIA = generateRandomVector<int>(size * size, 0, 1000);
+		std::vector<int> matrixIB = generateRandomVector<int>(size * size, 0, 1000);
+
+		floatMatricesA.push_back(matrixFA);
+        floatMatricesB.push_back(matrixFB);
+        intMatricesA.push_back(matrixIA);
+        intMatricesB.push_back(matrixIB);
 
 		// Benchmark transposeMatrix (float)
 		benchmarkAndSave("transposeMatrix", "float", size,
-			[&dataFA]() { return transposeMatrix(dataFA); });
+			[&matrixFA, size]() { return transposeMatrix(matrixFA, size); });
 
 		// Benchmark transposeMatrix (int)
 		benchmarkAndSave("transposeMatrix", "int", size,
-			[&dataIA]() { return transposeMatrix(dataIA); });
+			[&matrixIA, size]() { return transposeMatrix(matrixIA, size); });
 
 		// Benchmark multiplyMatrices (float)
 		benchmarkAndSave("multiplyMatrices", "float", size,
-			[&dataFA, &dataFB]() { return multiplyMatrices(dataFA, dataFB); });
+			[&matrixFA, &matrixFB, size]() { return multiplyMatrices(matrixFA, matrixFB, size); });
 
 		// Benchmark multiplyMatrices (int)
 		benchmarkAndSave("multiplyMatrices", "int", size,
-			[&dataIA, &dataIB]() { return multiplyMatrices(dataIA, dataIB); });
+			[&matrixIA, &matrixIB, size]() { return multiplyMatrices(matrixIA, matrixIB, size); });
+	}
+
+	std::cout << "Benchmarking done!" << std::endl;
+	std::cout << "Test data: " << std::endl;
+
+	// print floatMatricesA
+	std::cout << "floatMatricesA: " << std::endl;
+	for (int i = 0; i < floatMatricesA.size(); i++) {
+		std::cout << "size: " << sizes.at(i) << std::endl;
+
+		printMatrix(floatMatricesA.at(i), sizes.at(i));
+	}
+
+	// print floatMatricesB
+	std::cout << "floatMatricesB: " << std::endl;
+	for (int i = 0; i < floatMatricesB.size(); i++) {
+		std::cout << "size: " << sizes.at(i) << std::endl;
+
+		printMatrix(floatMatricesB.at(i), sizes.at(i));
+	}
+
+	// print intMatricesA
+	std::cout << "intMatricesA: " << std::endl;
+	for (int i = 0; i < intMatricesA.size(); i++) {
+		std::cout << "size: " << sizes.at(i) << std::endl;
+
+		printMatrix(intMatricesA.at(i), sizes.at(i));
+	}
+
+	// print intMatricesB
+	std::cout << "intMatricesB: " << std::endl;
+	for (int i = 0; i < intMatricesB.size(); i++) {
+		std::cout << "size: " << sizes.at(i) << std::endl;
+
+		printMatrix(intMatricesB.at(i), sizes.at(i));
 	}
 
 	return 0;

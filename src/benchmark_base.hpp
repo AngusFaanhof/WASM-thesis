@@ -33,7 +33,14 @@ template<typename Func, typename... Args>
 void benchmarkAndSave(const std::string& algorithmName, const std::string& dataType, size_t size, Func func, Args&&... args) {
 	auto executionTimes = runBenchmark(func, std::forward<Args>(args)...);
 	std::string fileName = getFileName(algorithmName, dataType, size);
-	saveToCSV(executionTimes, fileName);
+
+	std::cout << "Execution times for " << algorithmName << " (" << dataType << ") with size " << size << ": " << std::endl;
+	std::cout << '{';
+	for (auto time : executionTimes) {
+		std::cout << time << ",";
+	}
+	std::cout << '}' << std::endl;
+	// saveToCSV(executionTimes, fileName);
 }
 
 #endif // BENCHMARK_BASE_HPP
