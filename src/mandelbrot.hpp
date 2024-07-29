@@ -3,6 +3,7 @@
 
 #include <immintrin.h>
 #include <vector>
+#include <iostream>
 
 // Configuration parameters
 const float REAL_MIN = -2.0f;

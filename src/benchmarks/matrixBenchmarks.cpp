@@ -19,13 +19,15 @@
 
 int main() {
 	std::vector<size_t> sizes = {
-		16, 32, 64
+		4, 8
 	};
 
 	std::vector<std::vector<float>> floatMatricesA;
     std::vector<std::vector<float>> floatMatricesB;
     std::vector<std::vector<int>> intMatricesA;
     std::vector<std::vector<int>> intMatricesB;
+
+	std::cout << "Matrix algorithms" << std::endl;
 
 	for (int i = 0; i < sizes.size(); i++) {
 		size_t size = sizes.at(i);
@@ -57,7 +59,6 @@ int main() {
 			[&matrixIA, &matrixIB, size]() { return multiplyMatrices(matrixIA, matrixIB, size); });
 	}
 
-	std::cout << "Benchmarking done!" << std::endl;
 	std::cout << "Test data: " << std::endl;
 
 	// print floatMatricesA

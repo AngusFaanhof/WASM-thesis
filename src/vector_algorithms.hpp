@@ -10,7 +10,13 @@
 #include <fstream>
 #include <iomanip>
 
-// Implementation of normalizeVector
+void printVector(const std::vector<float>& vector) {
+	for (int i = 0; i < vector.size(); i++) {
+		std::cout << vector.at(i) << ",";
+	}
+	std::cout << std::endl;
+}
+
 std::vector<float> normalizeVector(std::vector<float>& vec) {
     size_t size = vec.size();
     __m128 sum = _mm_setzero_ps();
@@ -71,7 +77,6 @@ std::vector<float> normalizeVector(std::vector<int>& vec) {
     return result;
 }
 
-// Implementation of averageVector
 float averageVector(std::vector<float>& vec) {
     size_t size = vec.size();
     __m128 sum = _mm_setzero_ps();
