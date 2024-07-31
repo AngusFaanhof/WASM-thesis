@@ -6,7 +6,7 @@
 #include <string>
 
 #include "../utils.hpp"
-#include "../vector_algorithms.hpp"
+#include "vector_algorithms.hpp"
 #include "../benchmark_base.hpp"
 
 int main() {

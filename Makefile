@@ -3,33 +3,36 @@
 # Compiler settings
 CXX = g++
 EMCC = em++
-CXXFLAGS = -mavx -g -Wall -pedantic
-EMCCFLAGS = -mavx -msimd128
+CXXFLAGS = -mavx -I./src/include
+EMCCFLAGS = -mavx -msimd128 -I./src/include
+
+#include path
+INCLUDE = -I./src/include
 
 # Source files
-SRCS = src/benchmark.cpp src/matrixAddition.cpp src/helper.cpp src/dotProduct.cpp src/matrixMultiplication.cpp src/mandelbrot.cpp
-SRCS2 = src/benchmarks/mandelbrotBenchmark.cpp src/benchmarks/matrixBenchmarks.cpp src/benchmarks/vectorBenchmarks.cpp
+SRCS = src/mandelbrot.cpp src/matrix_algorithms.cpp src/vector_algorithms.cpp
+
 
 # Output files
 OUT_CPP = bin/benchmark
 OUT_WASM = bin/benchmark.wasm
 
 # Targets
-.PHONY: all cpp wasm
+.PHONY: all matrix vector mandelbrot
 
 all: matrix vector mandelbrot
 
-cpp:
-	$(CXX) $(CXXFLAGS) -o $(OUT_CPP) $(SRCS)
+# cpp:
+# 	$(CXX) $(CXXFLAGS) -o $(OUT_CPP) $(SRCS)
 
-wasm:
-	$(EMCC) $(EMCCFLAGS) -o $(OUT_WASM) $(SRCS)
+# wasm:
+# 	$(EMCC) $(EMCCFLAGS) -o $(OUT_WASM) $(SRCS)
 
-cbench:
-	$(CXX) $(CXXFLAGS) -o $(OUT_CPP) $(SRCS2)
+# cbench:
+# 	$(CXX) $(CXXFLAGS) -o $(OUT_CPP) $(SRCS2)
 
-wbench:
-	$(EMCC) $(EMCCFLAGS) -o $(OUT_WASM) $(SRCS2)
+# wbench:
+# 	$(EMCC) $(EMCCFLAGS) -o $(OUT_WASM) $(SRCS2)
 
 
 
@@ -43,13 +46,18 @@ vectorBenchmark = src/benchmarks/vectorBenchmarks.cpp
 mandelbrotBenchmark = src/benchmarks/mandelbrotBenchmark.cpp
 
 matrix:
-	$(CXX) $(CXXFLAGS) -o bin/matrix $(matrixBenchmark)
-	$(EMCC) $(EMCCFLAGS) -o bin/matrix.wasm $(matrixBenchmark)
+	$(CXX) $(CXXFLAGS) -o bin/matrix $(matrixBenchmark) src/matrix_algorithms.cpp
+	$(EMCC) $(EMCCFLAGS) -o bin/matrix.wasm $(matrixBenchmark) src/matrix_algorithms.cpp
 
 vector:
-	$(CXX) $(CXXFLAGS) -o bin/vector $(vectorBenchmark)
-	$(EMCC) $(EMCCFLAGS) -o bin/vector.wasm $(vectorBenchmark)
+	$(CXX) $(CXXFLAGS) -o bin/vector $(vectorBenchmark) src/vector_algorithms.cpp
+	$(EMCC) $(EMCCFLAGS) -o bin/vector.wasm $(vectorBenchmark) src/vector_algorithms.cpp
 
+# g++ -mavx -I./src/include -o mtest src/benchmarks/mandelbrotBenchmark.cpp src/mandelbrot.cpp
 mandelbrot:
-	$(CXX) $(CXXFLAGS) -o bin/mandelbrot $(mandelbrotBenchmark)
-	$(EMCC) $(EMCCFLAGS) -o bin/mandelbrot.wasm $(mandelbrotBenchmark)
+	$(CXX) $(CXXFLAGS) -o bin/mandelbrot $(mandelbrotBenchmark) src/mandelbrot.cpp
+	$(EMCC) $(EMCCFLAGS) -o bin/mandelbrot.wasm $(mandelbrotBenchmark) src/mandelbrot.cpp
+
+inspect:
+	$(CXX) $(CXXFLAGS) -g -o bin/inspect src/inspect.cpp $(SRCS)
+	$(EMCC) $(EMCCFLAGS) -g -o bin/inspect.wasm src/inspect.cpp $(SRCS)

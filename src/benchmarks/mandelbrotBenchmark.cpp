@@ -2,7 +2,7 @@
 
 #include "../utils.hpp"
 #include "../benchmark_base.hpp"
-#include "../mandelbrot.hpp"
+#include "mandelbrot.hpp"
 
 int main() {
 	std::vector<int> maxIterations = { 100, 200, 300 };

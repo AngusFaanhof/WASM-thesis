@@ -27,18 +27,18 @@ int main() {
 	std::vector<float> floatVector(16, 1.0f);
 
 	std::vector<int> mandelbrotResult = mandelbrot(800, 600, 16);
-	// std::vector<float> transposedFloatMatrix = transposeMatrix(floatVector, 4);
-	// std::vector<int> transposedIntMatrix = transposeMatrix(intVector, 4);
-	// std::vector<float> multipliedFloatMatrix = multiplyMatrix(floatVector, floatVector, 4);
-	// std::vector<int> multipliedIntMatrix = multiplyMatrix(intVector, intVector, 4);
-	// std::vector<float> normalizedFloatVector = normalizeVector(floatVector);
-	// std::vector<int> normalizedIntVector = normalizeVector(intVector);
-	// float averageFloat = averageVector(floatVector);
-	// float averageInt = averageVector(intVector);
-	// float dotProductFloat = dotProduct(floatVector, floatVector);
-	// int dotProductInt = dotProduct(intVector, intVector);
-	// std::vector<float> addedFloatVector = vectorAddition(floatVector, floatVector);
-	// std::vector<int> addedIntVector = vectorAddition(intVector, intVector);
+	std::vector<float> transposedFloatMatrix = transposeMatrix(floatVector, 4);
+	std::vector<int> transposedIntMatrix = transposeMatrix(intVector, 4);
+	std::vector<float> multipliedFloatMatrix = multiplyMatrices(floatVector, floatVector, 4);
+	std::vector<int> multipliedIntMatrix = multiplyMatrices(intVector, intVector, 4);
+	std::vector<float> normalizedFloatVector = normalizeVector(floatVector);
+	std::vector<float> normalizedIntVector = normalizeVector(intVector);
+	float averageFloat = averageVector(floatVector);
+	float averageInt = averageVector(intVector);
+	float dotProductFloat = dotProduct(floatVector, floatVector);
+	int dotProductInt = dotProduct(intVector, intVector);
+	std::vector<float> addedFloatVector = vectorAddition(floatVector, floatVector);
+	std::vector<int> addedIntVector = vectorAddition(intVector, intVector);
 
 	return 0;
 }

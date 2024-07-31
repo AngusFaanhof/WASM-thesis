@@ -6,7 +6,7 @@
 #include <string>
 
 #include "../utils.hpp"
-#include "../matrix_algorithms.hpp"
+#include "matrix_algorithms.hpp"
 #include "../benchmark_base.hpp"
 
 // # algorithms
