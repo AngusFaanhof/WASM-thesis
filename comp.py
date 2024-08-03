@@ -1,581 +1,116 @@
+import pandas as pd
 import numpy as np
-from tabulate import tabulate
-
-data = {
-    "CPP": {
-        "dotProduct": {
-            "int": {},
-            "float": {},
-        },
-        "mandelbrot": {
-            "int": {},
-            "float": {},
-        },
-        "addition": {
-            "int": {},
-            "float": {},
-        },
-        "matrixMultiplication": {
-            "int": {},
-            "float": {},
-        }
-    },
-    "wasmtime": {
-        "dotProduct": {
-            "int": {},
-            "float": {},
-        },
-        "mandelbrot": {
-            "int": {},
-            "float": {},
-        },
-        "addition": {
-            "int": {},
-            "float": {},
-        },
-        "matrixMultiplication": {
-            "int": {},
-            "float": {},
-        }
-    },
-    "wasmer": {
-        "dotProduct": {
-            "int": {},
-            "float": {},
-        },
-        "mandelbrot": {
-            "int": {},
-            "float": {},
-        },
-        "addition": {
-            "int": {},
-            "float": {},
-        },
-        "matrixMultiplication": {
-            "int": {},
-            "float": {},
-        }
-    },
-    "wavm": {
-        "dotProduct": {
-            "int": {},
-            "float": {},
-        },
-        "mandelbrot": {
-            "int": {},
-            "float": {},
-        },
-        "addition": {
-            "int": {},
-            "float": {},
-        },
-        "matrixMultiplication": {
-            "int": {},
-            "float": {},
-        }
-    }
-}
-
-dirs = ["CPP", "wasmtime", "wasmer", "wavm"]
-iterations = [16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288, 1048576]
-mandel_iterations = [16, 32, 64, 128, 256, 512, 1024, 2048, 4096]
-matrix_mult_iterations = [16, 64, 256, 1024, 4096, 16384, 65536, 262144, 1048576]
-methods = ["dotProduct", "addition", "matrixMultiplication", "mandelbrot"]
-
-# add_dot_sizes=(16 32 64 128 256 512 1024 2048 4096 8192 16384 32768 65536 131072 262144 524288)
-# read results/{dirs}[i]}/addition_i_{iteration}.csv and store in data["{dirs}"]["addition"]["int"][iteration]
-# read results/{dirs}[i]}/addition_f_{iteration}.csv and store in data["{dirs}"]["addition"]["float"][iteration]
-
-for d in dirs:
-    for i in iterations:
-        for method in ["dotProduct", "addition"]:
-            with open(f"results/{d}/{method}_i_{i}.csv", "r") as f:
-                data[d][method]["int"][i] = [int(x) for x in f.read().replace("\n", ",").split(",")[:-1]]
-
-            with open(f"results/{d}/{method}_f_{i}.csv", "r") as f:
-                data[d][method]["float"][i] = [int(x) for x in f.read().replace("\n", ",").split(",")[:-1]]
-
-    for i in mandel_iterations:
-        with open(f"results/{d}/mandelbrot_{i}.csv", "r") as f:
-            data[d]["mandelbrot"]["int"][i] = [int(x) for x in f.read().replace("\n", ",").split(",")[:-1]]
-
-    for i in matrix_mult_iterations:
-        with open(f"results/{d}/matrixMultiplication_i_{i}.csv", "r") as f:
-            data[d]["matrixMultiplication"]["int"][i] = [int(x) for x in f.read().replace("\n", ",").split(",")[:-1]]
-
-        with open(f"results/{d}/matrixMultiplication_f_{i}.csv", "r") as f:
-            data[d]["matrixMultiplication"]["float"][i] = [int(x) for x in f.read().replace("\n", ",").split(",")[:-1]]
-        # mandelbrot
-stats = {
-    "CPP": {
-        "addition": {
-            "int": {
-                "mean": {},
-                "std": {},
-                "median": {}
-            },
-            "float": {
-                "mean": {},
-                "std": {},
-                "median": {}
-            }
-        },
-        "dotProduct": {
-            "int": {
-                "mean": {},
-                "std": {},
-                "median": {}
-            },
-            "float": {
-                "mean": {},
-                "std": {},
-                "median": {}
-            }
-        },
-        "matrixMultiplication": {
-            "int": {
-                "mean": {},
-                "std": {},
-                "median": {}
-            },
-            "float": {
-                "mean": {},
-                "std": {},
-                "median": {}
-            }
-        },
-        "mandelbrot": {
-            "mean": {},
-            "std": {},
-            "median": {}
-        }
-    },
-    "wasmer": {
-        "addition": {
-            "int": {
-                "mean": {},
-                "std": {},
-                "median": {}
-            },
-            "float": {
-                "mean": {},
-                "std": {},
-                "median": {}
-            }
-        },
-        "dotProduct": {
-            "int": {
-                "mean": {},
-                "std": {},
-                "median": {}
-            },
-            "float": {
-                "mean": {},
-                "std": {},
-                "median": {}
-            }
-        },
-        "matrixMultiplication": {
-            "int": {
-                "mean": {},
-                "std": {},
-                "median": {}
-            },
-            "float": {
-                "mean": {},
-                "std": {},
-                "median": {}
-            }
-        },
-        "mandelbrot": {
-            "mean": {},
-            "std": {},
-            "median": {}
-        }
-    },
-    "wasmtime": {
-        "addition": {
-            "int": {
-                "mean": {},
-                "std": {},
-                "median": {}
-            },
-            "float": {
-                "mean": {},
-                "std": {},
-                "median": {}
-            }
-        },
-        "dotProduct": {
-            "int": {
-                "mean": {},
-                "std": {},
-                "median": {}
-            },
-            "float": {
-                "mean": {},
-                "std": {},
-                "median": {}
-            }
-        },
-        "matrixMultiplication": {
-            "int": {
-                "mean": {},
-                "std": {},
-                "median": {}
-            },
-            "float": {
-                "mean": {},
-                "std": {},
-                "median": {}
-            }
-        },
-        "mandelbrot": {
-            "mean": {},
-            "std": {},
-            "median": {}
-        }
-    },
-    "wavm": {
-        "addition": {
-            "int": {
-                "mean": {},
-                "std": {},
-                "median": {}
-            },
-            "float": {
-                "mean": {},
-                "std": {},
-                "median": {}
-            }
-        },
-        "dotProduct": {
-            "int": {
-                "mean": {},
-                "std": {},
-                "median": {}
-            },
-            "float": {
-                "mean": {},
-                "std": {},
-                "median": {}
-            }
-        },
-        "matrixMultiplication": {
-            "int": {
-                "mean": {},
-                "std": {},
-                "median": {}
-            },
-            "float": {
-                "mean": {},
-                "std": {},
-                "median": {}
-            }
-        },
-        "mandelbrot": {
-            "mean": {},
-            "std": {},
-            "median": {}
-        }
-    }
-}
-
-for d in dirs:
-    for t in ["int", "float"]:
-        for i in iterations:
-            for m in ["addition", "dotProduct"]:
-                stats[d][m][t]["mean"][i] = np.mean(data[d][m][t][i])
-                stats[d][m][t]["std"][i] = np.std(data[d][m][t][i])
-                stats[d][m][t]["median"][i] = np.median(data[d][m][t][i])
-
-        for i in matrix_mult_iterations:
-            stats[d]["matrixMultiplication"][t]["mean"][i] = np.mean(data[d]["matrixMultiplication"][t][i])
-            stats[d]["matrixMultiplication"][t]["std"][i] = np.std(data[d]["matrixMultiplication"][t][i])
-            stats[d]["matrixMultiplication"][t]["median"][i] = np.median(data[d]["matrixMultiplication"][t][i])
-
-    for i in mandel_iterations:
-        stats[d]["mandelbrot"]["mean"][i] = np.mean(data[d]["mandelbrot"]["int"][i])
-        stats[d]["mandelbrot"]["std"][i] = np.std(data[d]["mandelbrot"]["int"][i])
-        stats[d]["mandelbrot"]["median"][i] = np.median(data[d]["mandelbrot"]["int"][i])
-
-def print_table(metric, datatype, stats, method, iterations):
-    headers = ["Iteration", "CPP", "wasmer", "wasmtime", "wavm"]
-
-    if method == "mandelbrot":
-        data = [
-            [
-                iterations[i],
-                stats["CPP"][method][metric][iterations[i]],
-                stats["wasmer"][method][metric][iterations[i]],
-                stats["wasmtime"][method][metric][iterations[i]],
-                stats["wavm"][method][metric][iterations[i]]
-            ]
-            for i in range(len(iterations))
-        ]
-
-    else:
-        data = [
-            [
-                iterations[i],
-                stats["CPP"][method][datatype][metric][iterations[i]],
-                stats["wasmer"][method][datatype][metric][iterations[i]],
-                stats["wasmtime"][method][datatype][metric][iterations[i]],
-                stats["wavm"][method][datatype][metric][iterations[i]]
-            ]
-            for i in range(len(iterations))
-        ]
-
-    print(f"| {method} {datatype} {metric}")
-    print(tabulate(data, headers=headers, tablefmt="grid"))
-
-# print_table("median", "int", stats, "addition", iterations)
-# print_table("median", "float", stats, "addition", iterations)
-# print_table("median", "float", stats, "dotProduct")
-
-def print_scale_table(metric, datatype, stats, method, iterations):
-    headers = ["Iteration", "CPP", "wasmer", "wasmtime", "wavm"]
-    if method == "mandelbrot":
-        data = [
-            [
-                iterations[i],
-                stats["CPP"][method][metric][iterations[i]] / stats["CPP"][method][metric][iterations[i-1]],
-                stats["wasmer"][method][metric][iterations[i]] / stats["wasmer"][method][metric][iterations[i-1]],
-                stats["wasmtime"][method][metric][iterations[i]] / stats["wasmtime"][method][metric][iterations[i-1]],
-                stats["wavm"][method][metric][iterations[i]] / stats["wavm"][method][metric][iterations[i-1]]
-            ]
-            for i in range(1,len(iterations))
-        ]
-    else:
-        data =  [
-            [
-                iterations[i],
-                stats["CPP"][method][datatype][metric][iterations[i]] / stats["CPP"][method][datatype][metric][iterations[i-1]],
-                stats["wasmer"][method][datatype][metric][iterations[i]] / stats["wasmer"][method][datatype][metric][iterations[i-1]],
-                stats["wasmtime"][method][datatype][metric][iterations[i]] / stats["wasmtime"][method][datatype][metric][iterations[i-1]],
-                stats["wavm"][method][datatype][metric][iterations[i]] / stats["wavm"][method][datatype][metric][iterations[i-1]]
-            ]
-            for i in range(1,len(iterations))
-        ]
-    data.insert(0, [iterations[0], 1, 1, 1, 1])
-
-    # data = [iterations[0], 1, 1, 1]
-    # print(f"| {method} {datatype} {metric} scaling relative to previous iteration")
-    print(tabulate(data, headers=headers, tablefmt="latex", floatfmt=".2f"))
-
-# print_scale_table("std", "int", stats, "mandelbrot", mandel_iterations)
-# method = "dotProduct"
-# print_scale_table("std", "int", stats, method, iterations)
-# print_scale_table("std", "float", stats, method, iterations)
-# print(stats["wasmer"]["matrixMultiplication"]["int"]["mean"])
-
-def print_relative_table(metric, datatype, stats, method, iterations):
-    headers = ["Iteration", "wasmer", "wasmtime", "wavm"]
-
-    if method == "mandelbrot":
-        data = [
-            [
-                iterations[i],
-                stats["wasmer"][method][metric][iterations[i]] / stats["CPP"][method][metric][iterations[i]],
-                stats["wasmtime"][method][metric][iterations[i]] / stats["CPP"][method][metric][iterations[i]],
-                stats["wavm"][method][metric][iterations[i]] / stats["CPP"][method][metric][iterations[i]]
-            ]
-            for i in range(len(iterations))
-        ]
-    else:
-        data =  [
-            [
-                iterations[i],
-                stats["wasmer"][method][datatype][metric][iterations[i]] / stats["CPP"][method][datatype][metric][iterations[i]],
-                stats["wasmtime"][method][datatype][metric][iterations[i]] / stats["CPP"][method][datatype][metric][iterations[i]],
-                stats["wavm"][method][datatype][metric][iterations[i]] / stats["CPP"][method][datatype][metric][iterations[i]]
-            ]
-            for i in range(len(iterations))
-        ]
-
-    print(f"| {method} {datatype} {metric} relative to CPP")
-    print(tabulate(data, headers=headers, tablefmt="latex", floatfmt=".2f"))
-
-method = "matrixMultiplication"
-
-# print_relative_table("median", "int", stats, method, matrix_mult_iterations)
-# print_relative_table("median", "float", stats, method, matrix_mult_iterations)
-# print_relative_table("median", "int", stats, "mandelbrot", mandel_iterations)
-exit()
-
-# print_relative_table("median", "float", stats, "dotProduct")
-# exit()
-
-
 import matplotlib.pyplot as plt
-import numpy as np
+from statsmodels.graphics.tsaplots import plot_acf
+from scipy import stats
 
-def plot_single_graph(data, iterations, operation, data_type, runtimes):
-    fig, ax = plt.subplots(figsize=(12, 8))
-    fig.suptitle(f"Performance Comparison Across Runtimes: {operation} - {data_type}")
+def read_data(file_path):
+    # Read the CSV file
+    df = pd.read_csv(file_path, header=None)
 
-    ax.set_yscale('log', base=2)
-    ax.set_xlabel("Iterations")
+    # Flatten the dataframe into a single column
+    iteration_times = df.values.flatten()
 
-    ax.set_xscale('log', base=2)
-    ax.set_ylabel("Time (ns)")
+    # Create a new dataframe with a single column
+    df = pd.DataFrame({'iteration_time': iteration_times})
 
-    x_first = iterations[0]
-    y_first = np.mean(data["CPP"][operation][data_type][x_first])
+    return df
 
-    x_margin = (iterations[-1] - x_first) * 0.05
-    # y_margin = (iterations[-1] - y_first) * 0.05
-
-    ax.set_xlim(left=x_first - x_margin)
-    # ax.set_ylim(y_first - y_margin, np.mean(data["CPP"][operation][data_type][iterations[-1]]) + y_margin)
-
-    all_means = []
-
-    for runtime in runtimes:
-        means = []
-        errors = []
-        for iteration in iterations:
-            values = np.array(data[runtime][operation][data_type][iteration])
-            mean = np.mean(values)
-            std = np.std(values)
-            means.append(mean)
-            errors.append(std)
-
-        scaled_means = [(means[0] / iterations[0]) * iter for iter in iterations]
-
-        # Plot original means
-        ax.errorbar(iterations, means, yerr=errors, label=runtime, capsize=5, marker='o')
-
-        # Plot scaled means
-        # ax.plot(iterations, scaled_means, linestyle='--', label=f'{runtime} linear scaled')
-
-        all_means.extend(means)
-
-    ax.legend()
-    ax.grid(True, which="both", ls="-", alpha=0.2)
-
-    plt.tight_layout()
+def plot_run_sequence(data):
+    plt.figure(figsize=(12, 6))
+    plt.plot(data.index, data['iteration_time'])
+    plt.title('Run Sequence Plot')
+    plt.xlabel('Iteration')
+    plt.ylabel('Time')
     plt.show()
 
-# Example usage:
-operation = "dotProduct"
-data_type = "int"
-runtimes = ["CPP", "wasmtime", "wasmer", "wavm"]
-# iterations = [16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288]
-
-
-# Example usage:
-operations = ["dotProduct", "addition"]
-data_types = ["int", "float"]
-runtimes = ["CPP", "wasmtime", "wasmer", "wavm"]
-
-# plot_single_graph(data, mandel_iterations, "mandelbrot", "int", ["CPP", "wasmtime"])
-# plot_single_graph(data, mandel_iterations, "mandelbrot", "int", ["CPP", "wasmer"])
-# plot_single_graph(data, mandel_iterations, "mandelbrot", "int", ["CPP", "wavm"])
-# plot_grouped_data(data, iterations, operations, data_types, runtimes)
-
-# plot_grouped_data(
-# 	data,
-# 	mandel_iterations,
-# 	["mandelbrot"],
-# 	["int", "float"],
-# 	runtimes
-# )
-
-# plot_grouped_data(
-# 	data,
-# 	matrix_mult_iterations,
-# 	["matrixMultiplication"],
-# 	["int", "float"],
-# 	runtimes
-# )
-
-import matplotlib.pyplot as plt
-import numpy as np
-
-def plot_grouped_bar(method, datatype, runtimes, data, iterations, title):
-    fig, ax = plt.subplots(figsize=(15, 8))
-
-    plt.rc('legend', fontsize=14)
-
-    bar_width = 0.8 / len(runtimes)
-    opacity = 0.8
-
-    for i, runtime in enumerate(runtimes):
-        means = [np.median(data[runtime][method][datatype][iter]) for iter in iterations]
-        stds = [np.std(data[runtime][method][datatype][iter]) for iter in iterations]
-        positions = np.arange(len(iterations)) + i * bar_width
-
-        ax.bar(positions, means, bar_width,
-               alpha=opacity,
-               label=runtime,
-               yerr=stds,
-               capsize=5)
-
-    ax.set_ylabel('Execution time (ns)')
-    ax.set_xlabel('Input size')
-    ax.set_title(title)
-    ax.tick_params(axis='y', labelsize=16)
-    ax.set_xticks(np.arange(len(iterations)) + bar_width * (len(runtimes) - 1) / 2)
-    ax.set_xticklabels(iterations, rotation=45, ha='right', fontsize=16)
-    ax.legend()
-
-    ax.set_yscale('log', base=2)
-
-    ax.set_ylabel('Execution time (ns)', fontsize=16)
-    ax.set_xlabel('Input size', fontsize=16)
-    ax.set_title(title, fontsize=16)
-
-    plt.tight_layout()
+def plot_lag(data):
+    plt.figure(figsize=(12, 6))
+    plt.scatter(data['iteration_time'][:-1], data['iteration_time'][1:])
+    plt.title('Lag Plot')
+    plt.xlabel('Time(t)')
+    plt.ylabel('Time(t+1)')
     plt.show()
 
-# Example usage:
-method = "mandelbrot"
-datatype = "int"
-runtimes = ["CPP", "wasmtime", "wasmer", "wavm"]
-# iterations = [16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288, 104]
-title = f"Matrix Multiplication Execution Time"
-
-# plot_grouped_bar(method, datatype, runtimes, data, mandel_iterations, title)
-
-
-
-def plot_relative_performance(data, iterations, operation, data_type, runtimes):
-    fig, ax = plt.subplots(figsize=(12, 8))
-    fig.suptitle(f"Relative Performance: {operation} - {data_type}")
-
-    ax.set_yscale('log', base=2)
-    ax.set_xlabel("Input size")
-    ax.set_ylabel("Relative Performance (C++ = 1)")
-
-    for runtime in runtimes:
-        if runtime == "CPP":
-            continue
-        relative_means = []
-        for iteration in iterations:
-            cpp_mean = np.mean(data["CPP"][operation][data_type][iteration])
-            runtime_mean = np.mean(data[runtime][operation][data_type][iteration])
-            relative_means.append(runtime_mean / cpp_mean)
-
-        ax.plot(iterations, relative_means, label=runtime, marker='o')
-
-    ax.axhline(y=1, color='black', linestyle='--', label='C++ baseline')
-    ax.legend()
-    ax.grid(True, which="both", ls="-", alpha=0.2)
-
-    plt.tight_layout()
+def plot_autocorrelation(data):
+    plot_acf(data['iteration_time'])
+    plt.title('Autocorrelation Plot')
     plt.show()
 
-# Usage example
-# plot_relative_performance(data, iterations, "dotProduct", "int", runtimes)
+def find_stable_point(data):
+    # This is a simple heuristic. You might need to adjust this based on your data.
+    window = 20
+    rolling_mean = data['iteration_time'].rolling(window=window).mean()
+    rolling_std = data['iteration_time'].rolling(window=window).std()
 
-method = "dotProduct"
-# iterations = mandel_iterations
-# iterations = matrix_mult_iterations
+    stable_point = window
+    for i in range(window, len(data)):
+        if (abs(rolling_mean[i] - rolling_mean[i-1]) < rolling_std[i] * 0.1 and
+            abs(rolling_std[i] - rolling_std[i-1]) < rolling_std[i] * 0.1):
+            stable_point = i
+            break
 
+    return stable_point
 
-# print_relative_table("median", "int", stats, method, iterations)
-# print_table
-# print_scale_table
+def calculate_variance_estimates(data, stable_point):
+    stable_data = data.iloc[stable_point:]
 
-# plot_relative_performance(data, iterations, method, "int", runtimes)
+    # Variance at iteration level
+    T_1_squared = np.var(stable_data['iteration_time'], ddof=1)
+
+    # Variance at execution level (assuming each execution is 10 iterations)
+    execution_means = stable_data['iteration_time'].groupby(stable_data.index // 10).mean()
+    T_2_squared = np.var(execution_means, ddof=1) - T_1_squared / 10
+
+    return T_1_squared, T_2_squared
+
+def optimize_iteration_count(T_1_squared, T_2_squared, c_1, c_2, desired_precision):
+    r_1 = int(np.ceil(np.sqrt((c_2 * T_1_squared) / (c_1 * T_2_squared))))
+
+    total_iterations = r_1
+    while True:
+        half_width = stats.t.ppf(0.975, total_iterations - 1) * np.sqrt(T_2_squared / total_iterations)
+        relative_half_width = half_width / np.mean(data['iteration_time'])
+        if relative_half_width <= desired_precision:
+            break
+        total_iterations += 1
+
+    return r_1, total_iterations
+
+# Main analysis
+# file_path = 'Results/Native/averageVector_float_1048576.csv'
+# file_path = 'Results/Native/vectorDotProduct_float_1048576.csv'
+# file_path = 'Results/Native/multiplyMatrices_float_1024.csv'
+file_path = 'Results/Wasmtime/averageVector_float_262144.csv'
+data = read_data(file_path)
+
+# Print first few rows to verify data
+print(data.head())
+
+plot_run_sequence(data)
+plot_lag(data)
+plot_autocorrelation(data)
+
+stable_point = find_stable_point(data)
+print(f"Stable point found at iteration: {stable_point}")
+
+T_1_squared, T_2_squared = calculate_variance_estimates(data, stable_point)
+print(f"Variance estimate at iteration level: {T_1_squared}")
+print(f"Variance estimate at execution level: {T_2_squared}")
+
+# Assuming costs. You might need to adjust these based on your setup.
+c_1 = 1  # Cost of one iteration
+c_2 = 10  # Cost of one execution (assumed to be 10 iterations)
+
+desired_precision = 0.01  # 1% relative half-width
+
+r_1, total_iterations = optimize_iteration_count(T_1_squared, T_2_squared, c_1, c_2, desired_precision)
+
+print(f"Optimal number of iterations per execution: {r_1}")
+print(f"Total number of iterations needed for {desired_precision*100}% precision: {total_iterations}")
+
+current_iterations = len(data)
+if current_iterations >= total_iterations:
+    print(f"Your current {current_iterations} iterations are sufficient for your desired precision.")
+else:
+    print(f"You need {total_iterations} iterations to achieve your desired precision. Your current {current_iterations} iterations are not sufficient.")

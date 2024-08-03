@@ -1,0 +1,71 @@
+\begin{tabular}{rlrrrrr}
+\toprule
+    & Benchmark              &   Size &   Native &   Wasmedge &   Wasmer &   Wasmtime \\
+\midrule
+  0 & averageVector\_float    &     16 &   1.00 &     1.00 &   1.00 &     1.00 \\
+  1 & averageVector\_float    &    256 &   0.72 &     0.72 &   0.58 &     0.66 \\
+  2 & averageVector\_float    &   4096 &   0.86 &     0.80 &   0.72 &     0.76 \\
+  3 & averageVector\_float    &  65536 &   0.84 &     0.87 &   0.77 &     0.83 \\
+  4 & averageVector\_float    & 262144 &   0.88 &     0.89 &   0.80 &     0.85 \\
+  5 & averageVector\_int      &     16 &   1.00 &     1.00 &   1.00 &     1.00 \\
+  6 & averageVector\_int      &    256 &   0.74 &     0.57 &   0.61 &     0.66 \\
+  7 & averageVector\_int      &   4096 &   0.87 &     0.73 &   0.70 &     0.76 \\
+  8 & averageVector\_int      &  65536 &   0.87 &     0.81 &   0.78 &     0.82 \\
+  9 & averageVector\_int      & 262144 &   0.88 &     0.83 &   0.81 &     0.85 \\
+ 10 & mandelbrot             &     16 &   1.00 &     1.00 &   1.00 &     1.00 \\
+ 11 & mandelbrot             &     64 &   0.75 &     0.74 &   0.65 &     0.69 \\
+ 12 & mandelbrot             &    256 &   0.81 &     0.80 &   0.72 &     0.75 \\
+ 13 & mandelbrot             &   1024 &   0.85 &     0.85 &   0.80 &     0.80 \\
+ 14 & mandelbrot             &   4096 &   0.88 &     0.88 &   0.83 &     0.84 \\
+ 15 & multiplyMatrices\_float &      4 &   1.00 &     1.00 &   1.00 &     1.00 \\
+ 16 & multiplyMatrices\_float &     16 &   1.41 &     1.20 &   0.87 &     1.10 \\
+ 17 & multiplyMatrices\_float &     64 &   1.68 &     1.25 &   0.90 &     1.13 \\
+ 18 & multiplyMatrices\_float &    256 &   1.80 &     1.44 &   1.15 &     1.32 \\
+ 19 & multiplyMatrices\_float &    512 &   1.80 &     1.51 &   1.26 &     1.44 \\
+ 20 & multiplyMatrices\_int   &      4 &   1.00 &     1.00 &   1.00 &     1.00 \\
+ 21 & multiplyMatrices\_int   &     16 &   1.45 &     1.18 &   0.89 &     0.96 \\
+ 22 & multiplyMatrices\_int   &     64 &   1.68 &     1.27 &   0.90 &     1.06 \\
+ 23 & multiplyMatrices\_int   &    256 &   1.80 &     1.43 &   1.12 &     1.31 \\
+ 24 & multiplyMatrices\_int   &    512 &   1.82 &     1.50 &   1.24 &     1.47 \\
+ 25 & normalizeVector\_float  &     16 &   1.00 &     1.00 &   1.00 &     1.00 \\
+ 26 & normalizeVector\_float  &    256 &   0.75 &     0.91 &   0.69 &     0.85 \\
+ 27 & normalizeVector\_float  &   4096 &   0.85 &     0.91 &   0.82 &     0.91 \\
+ 28 & normalizeVector\_float  &  65536 &   0.86 &     0.94 &   0.85 &     0.94 \\
+ 29 & normalizeVector\_float  & 262144 &   0.88 &     0.95 &   0.87 &     0.94 \\
+ 30 & normalizeVector\_int    &     16 &   1.00 &     1.00 &   1.00 &     1.00 \\
+ 31 & normalizeVector\_int    &    256 &   0.84 &     0.83 &   0.83 &     0.79 \\
+ 32 & normalizeVector\_int    &   4096 &   0.90 &     0.88 &   0.87 &     0.88 \\
+ 33 & normalizeVector\_int    &  65536 &   0.88 &     0.93 &   0.91 &     0.91 \\
+ 34 & normalizeVector\_int    & 262144 &   0.91 &     0.93 &   0.92 &     0.92 \\
+ 35 & transposeMatrix\_float  &      4 &   1.00 &     1.00 &   1.00 &     1.00 \\
+ 36 & transposeMatrix\_float  &     16 &   0.64 &     0.72 &   0.63 &     0.70 \\
+ 37 & transposeMatrix\_float  &     64 &   0.78 &     0.82 &   0.77 &     0.82 \\
+ 38 & transposeMatrix\_float  &    256 &   0.84 &     0.79 &   0.70 &     0.79 \\
+ 39 & transposeMatrix\_float  &    512 &   0.87 &     0.80 &   0.74 &     0.83 \\
+ 40 & transposeMatrix\_int    &      4 &   1.00 &     1.00 &   1.00 &     1.00 \\
+ 41 & transposeMatrix\_int    &     16 &   0.67 &     0.81 &   0.58 &     0.69 \\
+ 42 & transposeMatrix\_int    &     64 &   0.79 &     0.85 &   0.71 &     0.83 \\
+ 43 & transposeMatrix\_int    &    256 &   0.86 &     0.80 &   0.73 &     0.80 \\
+ 44 & transposeMatrix\_int    &    512 &   0.88 &     0.83 &   0.76 &     0.83 \\
+ 45 & vectorAddition\_float   &     16 &   1.00 &     1.00 &   1.00 &     1.00 \\
+ 46 & vectorAddition\_float   &    256 &   0.82 &     0.94 &   0.84 &     0.86 \\
+ 47 & vectorAddition\_float   &   4096 &   0.89 &     0.91 &   0.91 &     0.92 \\
+ 48 & vectorAddition\_float   &  65536 &   0.88 &     0.95 &   0.91 &     0.94 \\
+ 49 & vectorAddition\_float   & 262144 &   0.91 &     0.95 &   0.92 &     0.95 \\
+ 50 & vectorAddition\_int     &     16 &   1.00 &     1.00 &   1.00 &     1.00 \\
+ 51 & vectorAddition\_int     &    256 &   0.84 &     0.75 &   0.83 &     0.84 \\
+ 52 & vectorAddition\_int     &   4096 &   0.92 &     0.86 &   0.87 &     0.90 \\
+ 53 & vectorAddition\_int     &  65536 &   0.90 &     0.92 &   0.91 &     0.93 \\
+ 54 & vectorAddition\_int     & 262144 &   0.91 &     0.92 &   0.92 &     0.94 \\
+ 55 & vectorDotProduct\_float &     16 &   1.00 &     1.00 &   1.00 &     1.00 \\
+ 56 & vectorDotProduct\_float &    256 &   0.81 &     0.81 &   0.63 &     0.70 \\
+ 57 & vectorDotProduct\_float &   4096 &   0.90 &     0.88 &   0.76 &     0.81 \\
+ 58 & vectorDotProduct\_float &  65536 &   0.88 &     0.91 &   0.80 &     0.87 \\
+ 59 & vectorDotProduct\_float & 262144 &   0.92 &     0.92 &   0.83 &     0.87 \\
+ 60 & vectorDotProduct\_int   &     16 &   1.00 &     1.00 &   1.00 &     1.00 \\
+ 61 & vectorDotProduct\_int   &    256 &   0.83 &     0.72 &   0.67 &     0.70 \\
+ 62 & vectorDotProduct\_int   &   4096 &   0.95 &     0.85 &   0.74 &     0.81 \\
+ 63 & vectorDotProduct\_int   &  65536 &   0.92 &     0.89 &   0.82 &     0.84 \\
+ 64 & vectorDotProduct\_int   & 262144 &   0.93 &     0.90 &   0.84 &     0.86 \\
+\bottomrule
+\end{tabular}

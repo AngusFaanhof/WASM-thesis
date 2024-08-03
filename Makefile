@@ -20,7 +20,7 @@ OUT_WASM = bin/benchmark.wasm
 # Targets
 .PHONY: all matrix vector mandelbrot
 
-all: matrix vector mandelbrot
+all: matrix vector mandelbrot wasmtime, wasmer, wasmedge
 
 # cpp:
 # 	$(CXX) $(CXXFLAGS) -o $(OUT_CPP) $(SRCS)
@@ -51,7 +51,7 @@ matrix:
 
 vector:
 	$(CXX) $(CXXFLAGS) -o bin/vector $(vectorBenchmark) src/vector_algorithms.cpp
-	$(EMCC) $(EMCCFLAGS) -o bin/vector.wasm $(vectorBenchmark) src/vector_algorithms.cpp
+	$(EMCC) $(EMCCFLAGS) -s MAXIMUM_MEMORY=4GB -o bin/vector.wasm $(vectorBenchmark) src/vector_algorithms.cpp
 
 # g++ -mavx -I./src/include -o mtest src/benchmarks/mandelbrotBenchmark.cpp src/mandelbrot.cpp
 mandelbrot:
@@ -61,3 +61,18 @@ mandelbrot:
 inspect:
 	$(CXX) $(CXXFLAGS) -g -o bin/inspect src/inspect.cpp $(SRCS)
 	$(EMCC) $(EMCCFLAGS) -g -o bin/inspect.wasm src/inspect.cpp $(SRCS)
+
+wasmtime:
+	wasmtime compile bin/mandelbrot.wasm -o bin/mandelbrot_time.cwasm
+	wasmtime compile bin/matrix.wasm -o bin/matrix_time.cwasm
+	wasmtime compile bin/vector.wasm -o bin/vector_time.cwasm
+
+wasmer:
+	wasmer compile -o bin/vector_mer.wasmu bin/vector.wasm
+	wasmer compile -o bin/matrix_mer.wasmu bin/matrix.wasm
+	wasmer compile -o bin/mandelbrot_mer.wasmu bin/mandelbrot.wasm
+
+wasmedge:
+	wasmedge compile bin/vector.wasm bin/vector_edge.cwasm
+	wasmedge compile bin/matrix.wasm bin/matrix_edge.cwasm
+	wasmedge compile bin/mandelbrot.wasm bin/mandelbrot_edge.cwasm

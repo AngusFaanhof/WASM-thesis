@@ -1,0 +1,22 @@
+\begin{tabular}{llllr}
+\toprule
+ Algorithm                      & Native    & Wasmtime   & Wasmer    &   WasmEdge \\
+\midrule
+ Vector: averageVector\_float    & 8131      & 9445       & 13235     &      14130 \\
+ Vector: averageVector\_int      & 8117      & 9231       & 11134     &      13795 \\
+ Vector: normalizeVector\_float  & 37030     & 124917     & 194879    &     153198 \\
+ Vector: normalizeVector\_int    & 35413     & 125316     & 178695    &     149138 \\
+ Vector: vectorDotProduct\_float & 12912     & 13757      & 20377     &      25520 \\
+ Vector: vectorDotProduct\_int   & 14703     & 12573      & 17570     &      24835 \\
+ Vector: vectorAddition\_float   & 30740     & 118711     & 185626    &     137534 \\
+ Vector: vectorAddition\_int     & 35406     & 119302     & 171495    &     130956 \\
+                                &           &            &           &            \\
+ Matrix: multiplyMatrices\_float & 511243    & 1125770    & 1451432   &    1798110 \\
+ Matrix: multiplyMatrices\_int   & 568886    & 1031082    & 1483522   &    1740861 \\
+ Matrix: transposeMatrix\_int    & 17960     & 156210     & 241699    &     182451 \\
+ Matrix: transposeMatrix\_float  & 17166     & 155941     & 298061    &     194811 \\
+                                &           &            &           &            \\
+ Mandelbrot: mandelbrot         & 149769690 & 262429968  & 272927239 &  821797845 \\
+                                &           &            &           &            \\
+\bottomrule
+\end{tabular}

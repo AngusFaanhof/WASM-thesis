@@ -10,7 +10,13 @@
 #include "../benchmark_base.hpp"
 
 int main() {
-    std::vector<size_t> sizes = {4, 8};
+    std::vector<size_t> sizes = {
+		16,
+		256,
+		4096,
+		65536,
+		262144
+	};
 
 	std::cout << "Vector algorithms" << std::endl;
 
@@ -24,6 +30,9 @@ int main() {
         std::vector<float> dataFB = generateRandomVector<float>(size, 0.0f, 1.0f);
         std::vector<int> dataIA = generateRandomVector<int>(size, 0, 1000);
         std::vector<int> dataIB = generateRandomVector<int>(size, 0, 1000);
+
+		// std::cout << "\n\n" << dataFA[0] << std::endl;
+		// break;
 
 		floatVectorsA.push_back(dataFA);
         floatVectorsB.push_back(dataFB);

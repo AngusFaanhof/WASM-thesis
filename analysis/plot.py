@@ -1,111 +1,127 @@
-# import numpy as np
-# import matplotlib.pyplot as plt
-# import csv
-
-# # Read the CSV file
-# add_dot_sizes = [16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288]
-# m_size = [16, 64, 256, 1024, 4096, 16384, 65536, 262144, 1048576]
-# # mandelbrot_iterations=(16 32 64 128 256 512 1024 2048 4096)
-# # m_iterations =
-# sizes = add_dot_sizes
-
-# data = []
-# with open('results/wavm/matrixAddition_i.csv', 'r') as file:
-#     csv_reader = csv.reader(file)
-#     for row in csv_reader:
-#         data.append([int(x) for x in row])
-
-# # Calculate medians
-# medians = [np.mean(row) for row in data]
-
-# # Create the plot
-# plt.figure(figsize=(12, 8))
-
-# # Plot the actual data
-# plt.boxplot(data, positions=sizes, widths=0.6)
-
-# # Plot the line that starts with the median of the first value and follows 2x
-# first_median = medians[0]
-# theoretical = [first_median * (2**i) for i in range(len(sizes))]
-# plt.plot(sizes, theoretical, 'r--', label='2x growth')
-
-# # Set the scale
-# plt.xscale('log', base=2)
-# plt.yscale('log', base=2)
-
-# # Set labels and title
-# plt.xlabel('Input Size')
-# plt.ylabel('Execution Time (ns)')
-# plt.title('Dot Product Performance (Float)')
-
-# # Set x-axis ticks
-# plt.xticks(sizes, sizes)
-
-# # Add legend
-# plt.legend()
-
-# # Add grid
-# plt.grid(True, which="both", ls="-", alpha=0.2)
-
-# # Show the plot
-# plt.tight_layout()
-# plt.show()
-
-# #########
-
-import numpy as np
-import matplotlib.pyplot as plt
 import csv
 import os
+import numpy as np
+from scipy import stats
+import matplotlib.pyplot as plt
+import seaborn as sns
+import re
+
+runtimes = ["Native", "Wasmtime", "Wasmer", "Wasmedge"]
+benchmarks = [
+    "averageVector_float", "averageVector_int", "normalizeVector_float", "normalizeVector_int",
+    "vectorDotProduct_float", "vectorDotProduct_int", "vectorAddition_float", "vectorAddition_int",
+    "multiplyMatrices_float", "multiplyMatrices_int", "transposeMatrix_int", "transposeMatrix_float",
+    "mandelbrot"
+]
+
+vector_sizes = [16, 256, 4096, 65536, 262144]
+vector_benchmarks = [
+    "averageVector_float", "averageVector_int", "normalizeVector_float", "normalizeVector_int",
+    "vectorDotProduct_float", "vectorDotProduct_int", "vectorAddition_float", "vectorAddition_int",
+]
+
+matrix_sizes = [4, 16, 64, 256, 512]
+matrix_benchmarks = [
+    "multiplyMatrices_float", "multiplyMatrices_int", "transposeMatrix_int", "transposeMatrix_float",
+]
+
+mandelbrot_sizes = [16, 64, 256, 1024, 4096]
+mandelbrot_benchmarks = ["mandelbrot"]
 
 def read_csv(file_path):
-    with open(file_path, 'r') as file:
-        csv_reader = csv.reader(file)
-        return [[int(x) for x in row] for row in csv_reader]
+    with open(file_path, 'r') as f:
+        return [int(x) for x in f.read().strip().split(',')]
 
-# Define sizes and runtimes
-sizes = [16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288]
-runtimes = ['CPP', 'wasmer', 'wasmtime', 'wavm']
+def calculate_metrics(data):
+    mean = np.mean(data)
+    median = np.median(data)
+    std_dev = np.std(data)
+    ci = stats.t.interval(0.95, len(data)-1, loc=mean, scale=stats.sem(data))
+    return {
+        'mean': mean,
+        'median': median,
+        'std_dev': std_dev,
+        'ci_lower': ci[0],
+        'ci_upper': ci[1]
+    }
 
-# Read data and calculate medians
-medians = {}
-for runtime in runtimes:
-    file_path = f'results/{runtime}/matrixAddition_i.csv'
-    if os.path.exists(file_path):
-        data = read_csv(file_path)
-        medians[runtime] = [np.median(row) for row in data]
+def get_sizes_for_benchmark(benchmark):
+    if benchmark in vector_benchmarks:
+        return vector_sizes
+    elif benchmark in matrix_benchmarks:
+        return matrix_sizes
+    elif benchmark in mandelbrot_benchmarks:
+        return mandelbrot_sizes
     else:
-        print(f"Warning: File not found - {file_path}")
-        medians[runtime] = [0] * len(sizes)  # placeholder data
+        return []
 
-# Set up the plot
-fig, ax = plt.subplots(figsize=(15, 8))
+results = {}
 
-# Set the width of each bar and the positions of the bars
-width = 0.2
-x = np.arange(len(sizes))
+for runtime in runtimes:
+    results[runtime] = {}
+    for benchmark in benchmarks:
+        results[runtime][benchmark] = {}
+        sizes = get_sizes_for_benchmark(benchmark)
+        for size in sizes:
+            file_path = f"Results/{runtime}/{benchmark}_{size}.csv"
+            if os.path.exists(file_path):
+                data = read_csv(file_path)
+                results[runtime][benchmark][size] = calculate_metrics(data)
 
-# Plot bars for each runtime
-for i, runtime in enumerate(runtimes):
-    ax.bar(x + i*width, medians[runtime], width, label=runtime)
+# Generate line plots for each benchmark
+os.makedirs("line", exist_ok=True)
 
-# Customize the plot
-ax.set_ylabel('Median Execution Time (ns)')
-ax.set_xlabel('Input Size')
-ax.set_title('Dot Product Performance Comparison (Float)')
-ax.set_xticks(x + width * 1.5)
-ax.set_xticklabels(sizes)
-ax.legend()
+def get_title(benchmark):
+    # example input: normalizeVector_int
+    # example title: Comparison normalize vector (int) performance across runtimes
 
-# Use log scale for y-axis
-ax.set_yscale('log', base=2)
+    # Split the benchmark string by underscore
+    parts = benchmark.split('_')
 
-# Rotate x-axis labels for better readability
-plt.setp(ax.get_xticklabels(), rotation=45, ha='right')
+    # Convert camelCase to space-separated words for the first part
+    operation = ' '.join(re.findall(r'[A-Z]?[a-z]+|[A-Z]+(?=[A-Z][a-z]|\d|\W|$)|\d+', parts[0]))
 
-# Add grid lines
-ax.grid(True, which='major', axis='y', linestyle='--', alpha=0.7)
+    # Capitalize the first letter of the operation
+    operation = operation.capitalize()
 
-# Adjust layout and display the plot
-plt.tight_layout()
-plt.show()
+    # Get the data type (if present)
+    data_type = f" ({parts[1]})" if len(parts) > 1 else ""
+
+    # Construct the title
+    title = f"Comparison mean {operation}{data_type} performance across runtimes"
+
+    return title
+
+def get_x_label(benchmark):
+	if benchmark in vector_benchmarks:
+		return "Vector Size"
+	elif benchmark in matrix_benchmarks:
+		return "Matrix Size (n x n)"
+	elif benchmark in mandelbrot_benchmarks:
+		return "Max iterations"
+
+for benchmark in benchmarks:
+    sizes = get_sizes_for_benchmark(benchmark)
+    plt.figure(figsize=(12, 6))
+
+	# title example
+	# Comparison normalize vector (int) performance across runtimes
+	# x-axis: Vector Size
+	# y-axis: Execution Time (nano seconds)
+
+    for runtime in runtimes:
+        runtime_data = [results[runtime][benchmark][size]['mean'] for size in sizes if size in results[runtime][benchmark]]
+        plt.plot(sizes[:len(runtime_data)], runtime_data, marker='o', label=runtime)
+
+    plt.xlabel(get_x_label(benchmark))
+    plt.ylabel('Execution Time (nano seconds)')
+    plt.title(get_title(benchmark))
+    plt.xscale('log', base=2)  # Use log scale for x-axis as sizes often vary by orders of magnitude
+    plt.yscale('log', base=2)  # Use log scale for y-axis as execution times often vary by orders of magnitude
+    plt.legend()
+    plt.grid(True, which="both", ls="-", alpha=0.2)
+    plt.tight_layout()
+    plt.savefig(f'line/{benchmark}.png')
+    plt.close()
+
+print(f"Graphs have been saved in the 'graphs' directory.")

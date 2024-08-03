@@ -8,7 +8,7 @@
 #include <functional>
 #include <string>
 
-const int NUM_RUNS = 5;
+const int NUM_RUNS = 50;
 
 // Generic benchmark function
 template<typename Func, typename... Args>

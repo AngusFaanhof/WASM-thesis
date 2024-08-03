@@ -1,0 +1,476 @@
+
+Native
+
+  averageVector_float
+  Size | Speedup
+  -----|--------
+    16 | -
+   256 | 0.19x
+  4096 | 0.07x
+  65536 | 0.15x
+  262144 | 0.25x
+
+  averageVector_int
+  Size | Speedup
+  -----|--------
+    16 | -
+   256 | 0.16x
+  4096 | 0.07x
+  65536 | 0.14x
+  262144 | 0.22x
+
+  normalizeVector_float
+  Size | Speedup
+  -----|--------
+    16 | -
+   256 | 0.24x
+  4096 | 0.06x
+  65536 | 0.12x
+  262144 | 0.27x
+
+  normalizeVector_int
+  Size | Speedup
+  -----|--------
+    16 | -
+   256 | 0.18x
+  4096 | 0.05x
+  65536 | 0.17x
+  262144 | 0.25x
+
+  vectorDotProduct_float
+  Size | Speedup
+  -----|--------
+    16 | -
+   256 | 0.14x
+  4096 | 0.06x
+  65536 | 0.18x
+  262144 | 0.22x
+
+  vectorDotProduct_int
+  Size | Speedup
+  -----|--------
+    16 | -
+   256 | 0.09x
+  4096 | 0.06x
+  65536 | 0.18x
+  262144 | 0.28x
+
+  vectorAddition_float
+  Size | Speedup
+  -----|--------
+    16 | -
+   256 | 0.21x
+  4096 | 0.05x
+  65536 | 0.17x
+  262144 | 0.24x
+
+  vectorAddition_int
+  Size | Speedup
+  -----|--------
+    16 | -
+   256 | 0.13x
+  4096 | 0.05x
+  65536 | 0.15x
+  262144 | 0.25x
+
+  multiplyMatrices_float
+  Size | Speedup
+  -----|--------
+     4 | -
+    16 | 0.03x
+    64 | 0.02x
+   256 | 0.02x
+   512 | 0.13x
+
+  multiplyMatrices_int
+  Size | Speedup
+  -----|--------
+     4 | -
+    16 | 0.03x
+    64 | 0.02x
+   256 | 0.01x
+   512 | 0.13x
+
+  transposeMatrix_int
+  Size | Speedup
+  -----|--------
+     4 | -
+    16 | 0.15x
+    64 | 0.07x
+   256 | 0.06x
+   512 | 0.24x
+
+  transposeMatrix_float
+  Size | Speedup
+  -----|--------
+     4 | -
+    16 | 0.17x
+    64 | 0.07x
+   256 | 0.06x
+   512 | 0.24x
+
+  mandelbrot
+  Size | Speedup
+  -----|--------
+    16 | -
+    64 | 0.45x
+   256 | 0.33x
+  1024 | 0.28x
+  4096 | 0.25x
+
+Wasmtime
+
+  averageVector_float
+  Size | Speedup
+  -----|--------
+    16 | -
+   256 | 0.43x
+  4096 | 0.10x
+  65536 | 0.13x
+  262144 | 0.25x
+
+  averageVector_int
+  Size | Speedup
+  -----|--------
+    16 | -
+   256 | 0.41x
+  4096 | 0.23x
+  65536 | 0.07x
+  262144 | 0.25x
+
+  normalizeVector_float
+  Size | Speedup
+  -----|--------
+    16 | -
+   256 | 0.17x
+  4096 | 0.07x
+  65536 | 0.13x
+  262144 | 0.27x
+
+  normalizeVector_int
+  Size | Speedup
+  -----|--------
+    16 | -
+   256 | 0.13x
+  4096 | 0.14x
+  65536 | 0.07x
+  262144 | 0.26x
+
+  vectorDotProduct_float
+  Size | Speedup
+  -----|--------
+    16 | -
+   256 | 0.31x
+  4096 | 0.08x
+  65536 | 0.17x
+  262144 | 0.26x
+
+  vectorDotProduct_int
+  Size | Speedup
+  -----|--------
+    16 | -
+   256 | 0.24x
+  4096 | 0.26x
+  65536 | 0.08x
+  262144 | 0.25x
+
+  vectorAddition_float
+  Size | Speedup
+  -----|--------
+    16 | -
+   256 | 0.14x
+  4096 | 0.07x
+  65536 | 0.12x
+  262144 | 0.27x
+
+  vectorAddition_int
+  Size | Speedup
+  -----|--------
+    16 | -
+   256 | 0.12x
+  4096 | 0.15x
+  65536 | 0.06x
+  262144 | 0.27x
+
+  multiplyMatrices_float
+  Size | Speedup
+  -----|--------
+     4 | -
+    16 | 0.07x
+    64 | 0.04x
+   256 | 0.02x
+   512 | 0.10x
+
+  multiplyMatrices_int
+  Size | Speedup
+  -----|--------
+     4 | -
+    16 | 0.07x
+    64 | 0.05x
+   256 | 0.02x
+   512 | 0.09x
+
+  transposeMatrix_int
+  Size | Speedup
+  -----|--------
+     4 | -
+    16 | 0.13x
+    64 | 0.06x
+   256 | 0.11x
+   512 | 0.25x
+
+  transposeMatrix_float
+  Size | Speedup
+  -----|--------
+     4 | -
+    16 | 0.13x
+    64 | 0.07x
+   256 | 0.11x
+   512 | 0.23x
+
+  mandelbrot
+  Size | Speedup
+  -----|--------
+    16 | -
+    64 | 0.53x
+   256 | 0.38x
+  1024 | 0.29x
+  4096 | 0.26x
+
+Wasmer
+
+  averageVector_float
+  Size | Speedup
+  -----|--------
+    16 | -
+   256 | 0.60x
+  4096 | 0.10x
+  65536 | 0.07x
+  262144 | 0.24x
+
+  averageVector_int
+  Size | Speedup
+  -----|--------
+    16 | -
+   256 | 0.46x
+  4096 | 0.10x
+  65536 | 0.07x
+  262144 | 0.25x
+
+  normalizeVector_float
+  Size | Speedup
+  -----|--------
+    16 | -
+   256 | 0.15x
+  4096 | 0.06x
+  65536 | 0.05x
+  262144 | 0.27x
+
+  normalizeVector_int
+  Size | Speedup
+  -----|--------
+    16 | -
+   256 | 0.13x
+  4096 | 0.06x
+  65536 | 0.06x
+  262144 | 0.26x
+
+  vectorDotProduct_float
+  Size | Speedup
+  -----|--------
+    16 | -
+   256 | 0.32x
+  4096 | 0.12x
+  65536 | 0.05x
+  262144 | 0.23x
+
+  vectorDotProduct_int
+  Size | Speedup
+  -----|--------
+    16 | -
+   256 | 0.32x
+  4096 | 0.09x
+  65536 | 0.08x
+  262144 | 0.22x
+
+  vectorAddition_float
+  Size | Speedup
+  -----|--------
+    16 | -
+   256 | 0.13x
+  4096 | 0.06x
+  65536 | 0.06x
+  262144 | 0.24x
+
+  vectorAddition_int
+  Size | Speedup
+  -----|--------
+    16 | -
+   256 | 0.14x
+  4096 | 0.06x
+  65536 | 0.06x
+  262144 | 0.25x
+
+  multiplyMatrices_float
+  Size | Speedup
+  -----|--------
+     4 | -
+    16 | 0.08x
+    64 | 0.07x
+   256 | 0.02x
+   512 | 0.12x
+
+  multiplyMatrices_int
+  Size | Speedup
+  -----|--------
+     4 | -
+    16 | 0.08x
+    64 | 0.08x
+   256 | 0.02x
+   512 | 0.11x
+
+  transposeMatrix_int
+  Size | Speedup
+  -----|--------
+     4 | -
+    16 | 0.19x
+    64 | 0.08x
+   256 | 0.11x
+   512 | 0.25x
+
+  transposeMatrix_float
+  Size | Speedup
+  -----|--------
+     4 | -
+    16 | 0.16x
+    64 | 0.07x
+   256 | 0.19x
+   512 | 0.25x
+
+  mandelbrot
+  Size | Speedup
+  -----|--------
+    16 | -
+    64 | 0.60x
+   256 | 0.39x
+  1024 | 0.27x
+  4096 | 0.27x
+
+Wasmedge
+
+  averageVector_float
+  Size | Speedup
+  -----|--------
+    16 | -
+   256 | 0.34x
+  4096 | 0.08x
+  65536 | 0.13x
+  262144 | 0.25x
+
+  averageVector_int
+  Size | Speedup
+  -----|--------
+    16 | -
+   256 | 0.33x
+  4096 | 0.16x
+  65536 | 0.06x
+  262144 | 0.25x
+
+  normalizeVector_float
+  Size | Speedup
+  -----|--------
+    16 | -
+   256 | 0.15x
+  4096 | 0.07x
+  65536 | 0.12x
+  262144 | 0.27x
+
+  normalizeVector_int
+  Size | Speedup
+  -----|--------
+    16 | -
+   256 | 0.14x
+  4096 | 0.12x
+  65536 | 0.08x
+  262144 | 0.25x
+
+  vectorDotProduct_float
+  Size | Speedup
+  -----|--------
+    16 | -
+   256 | 0.25x
+  4096 | 0.07x
+  65536 | 0.12x
+  262144 | 0.24x
+
+  vectorDotProduct_int
+  Size | Speedup
+  -----|--------
+    16 | -
+   256 | 0.22x
+  4096 | 0.14x
+  65536 | 0.07x
+  262144 | 0.25x
+
+  vectorAddition_float
+  Size | Speedup
+  -----|--------
+    16 | -
+   256 | 0.14x
+  4096 | 0.07x
+  65536 | 0.13x
+  262144 | 0.23x
+
+  vectorAddition_int
+  Size | Speedup
+  -----|--------
+    16 | -
+   256 | 0.12x
+  4096 | 0.15x
+  65536 | 0.06x
+  262144 | 0.24x
+
+  multiplyMatrices_float
+  Size | Speedup
+  -----|--------
+     4 | -
+    16 | 0.04x
+    64 | 0.04x
+   256 | 0.02x
+   512 | 0.13x
+
+  multiplyMatrices_int
+  Size | Speedup
+  -----|--------
+     4 | -
+    16 | 0.05x
+    64 | 0.03x
+   256 | 0.02x
+   512 | 0.13x
+
+  transposeMatrix_int
+  Size | Speedup
+  -----|--------
+     4 | -
+    16 | 0.10x
+    64 | 0.08x
+   256 | 0.12x
+   512 | 0.25x
+
+  transposeMatrix_float
+  Size | Speedup
+  -----|--------
+     4 | -
+    16 | 0.12x
+    64 | 0.07x
+   256 | 0.11x
+   512 | 0.28x
+
+  mandelbrot
+  Size | Speedup
+  -----|--------
+    16 | -
+    64 | 0.46x
+   256 | 0.33x
+  1024 | 0.28x
+  4096 | 0.26x

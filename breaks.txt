@@ -1,0 +1,13 @@
+b src/mandelbrot.cpp:7
+b src/matrix_algorithms.cpp:10
+b src/matrix_algorithms.cpp:32
+b src/matrix_algorithms.cpp:64
+b src/matrix_algorithms.cpp:85
+b src/vector_algorithms.cpp:13
+b src/vector_algorithms.cpp:41
+b src/vector_algorithms.cpp:73
+b src/vector_algorithms.cpp:91
+b src/vector_algorithms.cpp:112
+b src/vector_algorithms.cpp:131
+b src/vector_algorithms.cpp:150
+b src/vector_algorithms.cpp:164

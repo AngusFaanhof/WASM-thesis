@@ -5,7 +5,13 @@
 #include "mandelbrot.hpp"
 
 int main() {
-	std::vector<int> maxIterations = { 100, 200, 300 };
+	std::vector<int> maxIterations = {
+		16,
+		64,
+		256,
+		1024,
+		4096
+	};
 
 	for (auto iterations : maxIterations) {
 		// std::cout << iterations << std::endl;
