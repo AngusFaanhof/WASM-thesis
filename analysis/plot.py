@@ -30,7 +30,7 @@ mandelbrot_benchmarks = ["mandelbrot"]
 
 def read_csv(file_path):
     with open(file_path, 'r') as f:
-        return [int(x) for x in f.read().strip().split(',')]
+        return [int(x) for x in f.read().strip().split(',')[1:]]
 
 def calculate_metrics(data):
     mean = np.mean(data)
@@ -93,21 +93,20 @@ def get_title(benchmark):
     return title
 
 def get_x_label(benchmark):
-	if benchmark in vector_benchmarks:
-		return "Vector Size"
-	elif benchmark in matrix_benchmarks:
-		return "Matrix Size (n x n)"
-	elif benchmark in mandelbrot_benchmarks:
-		return "Max iterations"
+    if benchmark in vector_benchmarks:
+        return "Vector Size"
+    elif benchmark in matrix_benchmarks:
+        return "Matrix Size (n x n)"
+    elif benchmark in mandelbrot_benchmarks:
+        return "Max iterations"
 
 for benchmark in benchmarks:
     sizes = get_sizes_for_benchmark(benchmark)
     plt.figure(figsize=(12, 6))
 
-	# title example
-	# Comparison normalize vector (int) performance across runtimes
-	# x-axis: Vector Size
-	# y-axis: Execution Time (nano seconds)
+
+    # increase text size
+    plt.rc('font', size=18)
 
     for runtime in runtimes:
         runtime_data = [results[runtime][benchmark][size]['mean'] for size in sizes if size in results[runtime][benchmark]]
@@ -115,8 +114,12 @@ for benchmark in benchmarks:
 
     plt.xlabel(get_x_label(benchmark))
     plt.ylabel('Execution Time (nano seconds)')
-    plt.title(get_title(benchmark))
+    # plt.title(get_title(benchmark))
+
     plt.xscale('log', base=2)  # Use log scale for x-axis as sizes often vary by orders of magnitude
+    # plt.xscale('linear')
+    plt.xticks(sizes, labels=sizes)
+
     plt.yscale('log', base=2)  # Use log scale for y-axis as execution times often vary by orders of magnitude
     plt.legend()
     plt.grid(True, which="both", ls="-", alpha=0.2)

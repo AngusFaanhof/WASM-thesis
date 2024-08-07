@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-import os
+import os, re
 
 def read_csv(file_path):
     df = pd.read_csv(file_path, header=None, usecols=range(1, 50))
@@ -10,6 +10,27 @@ def read_csv(file_path):
 
 def calculate_mean(data):
     return np.mean(data)
+
+def get_title(benchmark):
+    # example input: normalizeVector_int
+    # example title: Comparison normalize vector (int) performance across runtimes
+
+    # Split the benchmark string by underscore
+    parts = benchmark.split('_')
+
+    # Convert camelCase to space-separated words for the first part
+    operation = ' '.join(re.findall(r'[A-Z]?[a-z]+|[A-Z]+(?=[A-Z][a-z]|\d|\W|$)|\d+', parts[0]))
+
+    # Capitalize the first letter of the operation
+    operation = operation.capitalize()
+
+    # Get the data type (if present)
+    data_type = f" ({parts[1]})" if len(parts) > 1 else ""
+
+    # Construct the title
+    title = f"{operation} ({data_type})"
+
+    return title
 
 def process_benchmark(runtime, benchmark, size):
     file_path = f"Results/{runtime}/{benchmark}_{size}.csv"
@@ -45,12 +66,15 @@ def create_heatmap(data, runtime, benchmarks, sizes, category):
                      xticklabels=sizes, yticklabels=benchmarks, cbar_kws={'label': 'Runtime / Native'})
 
     # Customize the plot
-    plt.title(f"{category} Benchmarks: {runtime} vs Native")
+    # plt.title(f"{category} Benchmarks: {runtime} vs Native")
     plt.xlabel("Size")
     plt.ylabel("Benchmark")
 
     # Rotate x-axis labels for better readability
     plt.xticks(rotation=45, ha='right')
+
+    # y labels should be get_title(benchmark)
+    ax.set_yticklabels([get_title(benchmark) for benchmark in benchmarks], rotation=0)
 
     # Adjust layout and save
     plt.tight_layout()

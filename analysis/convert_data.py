@@ -19,16 +19,14 @@ def process_benchmark(runtime, benchmark, size):
     return calculate_geometric_mean(data)
 
 def format_number(number):
-    if number < 0.01:
-        return f"{number:.6f}"
-    elif number < 1:
-        return f"{number:.4f}"
+    if number < 1:
+        return f"\\textbf{{{number:.4f}}}"
     elif number < 10:
         return f"{number:.2f}"
     else:
         return f"{number:.0f}"
 
-def generate_geometric_mean_table(runtimes, benchmark_categories):
+def generate_relative_geometric_mean_table(runtimes, benchmark_categories):
     table = []
     for category, (benchmarks, sizes) in benchmark_categories.items():
         for benchmark in benchmarks:
@@ -43,7 +41,7 @@ def generate_geometric_mean_table(runtimes, benchmark_categories):
                 continue
 
             native_geomean = calculate_geometric_mean(native_means)
-            row.append(format_number(native_geomean))
+            row.append("1")  # Native is always 1
 
             for runtime in runtimes[1:]:  # Skip 'Native'
                 runtime_means = []
@@ -57,7 +55,7 @@ def generate_geometric_mean_table(runtimes, benchmark_categories):
                 else:
                     runtime_geomean = calculate_geometric_mean(runtime_means)
                     ratio = runtime_geomean / native_geomean
-                    row.append(format_number(runtime_geomean))
+                    row.append(format_number(ratio))
 
             table.append(row)
 
@@ -85,7 +83,7 @@ benchmark_categories = {
     )
 }
 
-table = generate_geometric_mean_table(runtimes, benchmark_categories)
+table = generate_relative_geometric_mean_table(runtimes, benchmark_categories)
 
 # Define headers for the table
 headers = ["Algorithm", "Native", "Wasmtime", "Wasmer", "WasmEdge"]
@@ -97,7 +95,7 @@ latex_table = tabulate(table, headers=headers, tablefmt="latex_booktabs")
 print(latex_table)
 
 # Optionally, save the LaTeX table to a file
-with open("geometric_mean_comparison.tex", "w") as f:
-    f.write(latex_table)
+# with open("relative_geometric_mean_comparison.tex", "w") as f:
+#     f.write(latex_table)
 
-print("Geometric mean comparison table has been generated and saved as 'geometric_mean_comparison.tex'.")
+# print("Relative geometric mean comparison table has been generated and saved as 'relative_geometric_mean_comparison.tex'.")

@@ -38,7 +38,7 @@ def get_sizes_for_benchmark(benchmark):
 
 def read_csv(file_path):
     with open(file_path, 'r') as f:
-        return [int(x) for x in f.read().strip().split(',')]
+        return [int(x) for x in f.read().strip().split(',')[1:]]
 
 # def create_distribution_plot(benchmark, size, data):
 #     plt.figure(figsize=(12, 6))
