@@ -1,64 +1,30 @@
-# BSc Thesis: SIMD Performance in WebAssembly Runtimes
+# WebAssembly SIMD Performance Benchmark Suite
 
-This repository contains the source code and benchmarks for my Bachelor's thesis investigating SIMD performance in WebAssembly runtimes.
+This repository contains the benchmark suite used in the thesis "Benchmarking SIMD Performance Across WASM Runtimes" by Angus Faanhof.
 
-## Source Code
+## Installation
 
-The source code for the benchmarks can be found in the `src/` directory.
+### Prerequisites
 
-## Compilation
+Ensure you have the following software versions installed:
 
-To compile the benchmark executables, use the following commands:
+- Wasmtime-cli 20.0.0
+- Wasmer 4.3.5
+- WasmEdge 0.14.0
+- Emscripten 3.1.58
+- GCC 11.4.0
+- Python 3.12.3
 
-- For C++: `make cpp`
-- For WebAssembly: `make wasm`
-- For both: `make all`
+### Setup
 
-## Running the Benchmark
+1. Clone this repository
+2. Update the wasmer_path, wasmtime_path, and wasmedge_path variables in scripts/run.sh
 
-Execute `experiment.sh` to run the full benchmark suite. Please note that this can take a considerable amount of time.
+## Usage
 
-For individual benchmark runs:
-
-- For WebAssembly: `{runtime} run benchmark.wasm {method} {size} {useFloat}`
-- For native: `./benchmark {method} {size} {useFloat}`
-
-### Arguments
-
-#### Methods
-
-| ID | Method               |
-|----|----------------------|
-| 0  | Vector Addition      |
-| 1  | Dot Product          |
-| 2  | Matrix Multiplication|
-| 3  | Mandelbrot           |
-
-#### Size Options
-
-- **Vector Addition & Dot Product:**
-  16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288, 1048576
-
-- **Matrix Multiplication:**
-  16, 64, 256, 1024, 4096, 16384, 65536, 262144, 1048576
-
-- **Mandelbrot:**
-  16, 32, 64, 128, 256, 512, 1024, 2048, 4096
-
-#### Data Type
-
-*Required only for methods 0, 1, and 2*
-
-| ID | Type    |
-|----|---------|
-| 0  | Integer |
-| 1  | Float   |
-
-## Example Usage
-
-```bash
-# Run Vector Addition benchmark with size 1024 using floats on Wasmtime
-wasmtime run benchmark.wasm 0 1024 1
-
-# Run Mandelbrot benchmark with 256 iterations natively
-./benchmark 3 256
+1. Compile the benchmarks:
+> make all
+2. Run the benchmarks:
+> sudo analysis/run.sh
+3. Get result overview:
+> ptyhon3 overview.py
