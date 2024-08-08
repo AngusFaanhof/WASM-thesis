@@ -78,7 +78,7 @@ def create_heatmap(data, runtime, benchmarks, sizes, category):
 
     # Adjust layout and save
     plt.tight_layout()
-    plt.savefig(f"heatmaps/{category.lower()}_{runtime.lower()}_heatmap.png", dpi=300, bbox_inches='tight')
+    plt.savefig(f"analysis/heatmaps/{category.lower()}_{runtime.lower()}_heatmap.png", dpi=300, bbox_inches='tight')
     plt.close()
 
 # Define benchmarks and sizes

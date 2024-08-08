@@ -114,7 +114,7 @@ def main():
     latex_table = tabulate(sorted_table, headers='keys', tablefmt='latex_booktabs', floatfmt='.4f')
 
     # Save to .tex file
-    with open('simd_scaling_comparison_table.tex', 'w') as f:
+    with open('analysis/tables/simd_scaling_comparison_table.tex', 'w') as f:
         f.write(latex_table)
 
     print("SIMD scaling comparison table has been generated and saved to 'simd_scaling_comparison_table.tex'")

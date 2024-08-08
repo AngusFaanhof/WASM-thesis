@@ -3,14 +3,14 @@
 # Compiler settings
 CXX = g++
 EMCC = em++
-CXXFLAGS = -mavx -I./src/include
-EMCCFLAGS = -mavx -msimd128 -I./src/include
+CXXFLAGS = -mavx -I./include
+EMCCFLAGS = -mavx -msimd128 -I./include -std=c++17
 
 #include path
-INCLUDE = -I./src/include
+INCLUDE = -I./include
 
 # Source files
-SRCS = src/mandelbrot.cpp src/matrix_algorithms.cpp src/vector_algorithms.cpp
+SRCS = src/mandelbrot.cpp src/matrix_algorithms.cpp src/vector_algorithms.cpp src/utils.cpp
 
 
 # Output files
@@ -20,59 +20,39 @@ OUT_WASM = bin/benchmark.wasm
 # Targets
 .PHONY: all matrix vector mandelbrot
 
-all: matrix vector mandelbrot wasmtime, wasmer, wasmedge
+all: matrix vector mandelbrot wasmtime wasmer wasmedge
 
-# cpp:
-# 	$(CXX) $(CXXFLAGS) -o $(OUT_CPP) $(SRCS)
-
-# wasm:
-# 	$(EMCC) $(EMCCFLAGS) -o $(OUT_WASM) $(SRCS)
-
-# cbench:
-# 	$(CXX) $(CXXFLAGS) -o $(OUT_CPP) $(SRCS2)
-
-# wbench:
-# 	$(EMCC) $(EMCCFLAGS) -o $(OUT_WASM) $(SRCS2)
-
-
-
-# make file creates the following
-# matrix {C++ and WebAssembly} file=src/benchmarks/matrixBenchmarks.cpp
-# vector {C++ and WebAssembly} file=src/benchmarks/vectorBenchmarks.cpp
-# mandelbrot {C++ and WebAssembly} file=src/benchmarks/mandelbrotBenchmark.cpp
-
-matrixBenchmark = src/benchmarks/matrixBenchmarks.cpp
-vectorBenchmark = src/benchmarks/vectorBenchmarks.cpp
-mandelbrotBenchmark = src/benchmarks/mandelbrotBenchmark.cpp
+matrixBenchmark = src/benchmarks/matrixBenchmarks.cpp src/matrix_algorithms.cpp src/utils.cpp
+vectorBenchmark = src/benchmarks/vectorBenchmarks.cpp src/vector_algorithms.cpp src/utils.cpp
+mandelbrotBenchmark = src/benchmarks/mandelbrotBenchmark.cpp src/mandelbrot.cpp src/utils.cpp
 
 matrix:
-	$(CXX) $(CXXFLAGS) -o bin/matrix $(matrixBenchmark) src/matrix_algorithms.cpp
-	$(EMCC) $(EMCCFLAGS) -o bin/matrix.wasm $(matrixBenchmark) src/matrix_algorithms.cpp
+	$(CXX) $(CXXFLAGS) -o bin/native/matrix $(matrixBenchmark)
+	$(EMCC) $(EMCCFLAGS) -o bin/matrix.wasm $(matrixBenchmark)
 
 vector:
-	$(CXX) $(CXXFLAGS) -o bin/vector $(vectorBenchmark) src/vector_algorithms.cpp
-	$(EMCC) $(EMCCFLAGS) -s MAXIMUM_MEMORY=4GB -o bin/vector.wasm $(vectorBenchmark) src/vector_algorithms.cpp
+	$(CXX) $(CXXFLAGS) -o bin/native/vector $(vectorBenchmark)
+	$(EMCC) $(EMCCFLAGS) -o bin/vector.wasm $(vectorBenchmark)
 
-# g++ -mavx -I./src/include -o mtest src/benchmarks/mandelbrotBenchmark.cpp src/mandelbrot.cpp
 mandelbrot:
-	$(CXX) $(CXXFLAGS) -o bin/mandelbrot $(mandelbrotBenchmark) src/mandelbrot.cpp
-	$(EMCC) $(EMCCFLAGS) -o bin/mandelbrot.wasm $(mandelbrotBenchmark) src/mandelbrot.cpp
+	$(CXX) $(CXXFLAGS) -o bin/native/mandelbrot $(mandelbrotBenchmark)
+	$(EMCC) $(EMCCFLAGS) -o bin/mandelbrot.wasm $(mandelbrotBenchmark)
 
 inspect:
 	$(CXX) $(CXXFLAGS) -g -o bin/inspect src/inspect.cpp $(SRCS)
 	$(EMCC) $(EMCCFLAGS) -g -o bin/inspect.wasm src/inspect.cpp $(SRCS)
 
 wasmtime:
-	wasmtime compile bin/mandelbrot.wasm -o bin/mandelbrot_time.cwasm
-	wasmtime compile bin/matrix.wasm -o bin/matrix_time.cwasm
-	wasmtime compile bin/vector.wasm -o bin/vector_time.cwasm
+	wasmtime compile bin/mandelbrot.wasm -o bin/wasmtime/mandelbrot.cwasm
+	wasmtime compile bin/matrix.wasm -o bin/wasmtime/matrix.cwasm
+	wasmtime compile bin/vector.wasm -o bin/wasmtime/vector.cwasm
 
 wasmer:
-	wasmer compile -o bin/vector_mer.wasmu bin/vector.wasm
-	wasmer compile -o bin/matrix_mer.wasmu bin/matrix.wasm
-	wasmer compile -o bin/mandelbrot_mer.wasmu bin/mandelbrot.wasm
+	wasmer compile -o bin/wasmer/vector.wasmu bin/vector.wasm
+	wasmer compile -o bin/wasmer/matrix.wasmu bin/matrix.wasm
+	wasmer compile -o bin/wasmer/mandelbrot.wasmu bin/mandelbrot.wasm
 
 wasmedge:
-	wasmedge compile bin/vector.wasm bin/vector_edge.cwasm
-	wasmedge compile bin/matrix.wasm bin/matrix_edge.cwasm
-	wasmedge compile bin/mandelbrot.wasm bin/mandelbrot_edge.cwasm
+	wasmedge compile bin/vector.wasm bin/wasmedge/vector.cwasm
+	wasmedge compile bin/matrix.wasm bin/wasmedge/matrix.cwasm
+	wasmedge compile bin/mandelbrot.wasm bin/wasmedge/mandelbrot.cwasm

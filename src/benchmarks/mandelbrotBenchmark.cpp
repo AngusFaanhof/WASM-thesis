@@ -1,8 +1,8 @@
 #include <vector>
 
-#include "../utils.hpp"
-#include "../benchmark_base.hpp"
-#include "mandelbrot.hpp"
+#include "../../include/utils.hpp"
+#include "../../include/benchmark_base.hpp"
+#include "../../include/mandelbrot.hpp"
 
 int main() {
 	std::vector<int> maxIterations = {
@@ -13,8 +13,16 @@ int main() {
 		4096
 	};
 
+	std::cout << "Mandelbrot benchmarks" << std::endl;
+
 	for (auto iterations : maxIterations) {
-		// std::cout << iterations << std::endl;
+
+		std::cout << std::endl;
+		std::cout << "Size: " << iterations << std::endl;
+
+		std::cout << std::endl;
+		std::cout << "Execution times: " << std::endl;
+
 		benchmarkAndSave("mandelbrot", "none", iterations,
 			[&iterations]() { return mandelbrot(800, 600, iterations); });
 	}

@@ -65,7 +65,7 @@ def create_distribution_plot(benchmark, size, data):
     # Create 'plots' directory if it doesn't exist
     os.makedirs('boxplots', exist_ok=True)
 
-    plt.savefig(f'boxplots/{benchmark}_{size}_distribution.png')
+    plt.savefig(f'analysis/boxplots/{benchmark}_{size}_distribution.png')
     plt.close()
 
 def main():

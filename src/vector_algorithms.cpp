@@ -1,4 +1,4 @@
-#include "vector_algorithms.hpp"
+#include "../include/vector_algorithms.hpp"
 #include <iostream>
 #include <immintrin.h>
 

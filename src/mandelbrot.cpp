@@ -1,4 +1,4 @@
-#include "mandelbrot.hpp"
+#include "../include/mandelbrot.hpp"
 
 #include <immintrin.h>
 #include <iostream>

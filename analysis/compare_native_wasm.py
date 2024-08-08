@@ -88,5 +88,5 @@ table = tabulate(final_table, headers=headers, tablefmt="grid")
 print(table)
 
 # Optionally, save the LaTeX table to a file
-with open("benchmark_results.tex", "w") as f:
+with open("analysis/tables/benchmark_results.tex", "w") as f:
     f.write(latex_table)

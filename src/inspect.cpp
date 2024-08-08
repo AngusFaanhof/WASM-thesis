@@ -2,9 +2,9 @@
 #include <vector>
 
 // include mandelbrot, matrix_algorithms, vector_algorithms
-#include "mandelbrot.hpp"
-#include "matrix_algorithms.hpp"
-#include "vector_algorithms.hpp"
+#include "../include/mandelbrot.hpp"
+#include "../include/matrix_algorithms.hpp"
+#include "../include/vector_algorithms.hpp"
 
 /* METHOD CALLS
 mandelbrot(800, 600, 16);

@@ -5,9 +5,9 @@
 #include <functional>
 #include <string>
 
-#include "../utils.hpp"
-#include "vector_algorithms.hpp"
-#include "../benchmark_base.hpp"
+#include "../../include/utils.hpp"
+#include "../../include/vector_algorithms.hpp"
+#include "../../include/benchmark_base.hpp"
 
 int main() {
     std::vector<size_t> sizes = {
@@ -18,12 +18,7 @@ int main() {
 		262144
 	};
 
-	std::cout << "Vector algorithms" << std::endl;
-
-	std::vector<std::vector<float>> floatVectorsA;
-    std::vector<std::vector<float>> floatVectorsB;
-    std::vector<std::vector<int>> intVectorsA;
-    std::vector<std::vector<int>> intVectorsB;
+	std::cout << "Vector benchmarks" << std::endl;
 
     for (auto size : sizes) {
         std::vector<float> dataFA = generateRandomVector<float>(size, 0.0f, 1.0f);
@@ -31,14 +26,25 @@ int main() {
         std::vector<int> dataIA = generateRandomVector<int>(size, 0, 1000);
         std::vector<int> dataIB = generateRandomVector<int>(size, 0, 1000);
 
-		// std::cout << "\n\n" << dataFA[0] << std::endl;
-		// break;
+		std::cout << std::endl;
+		std::cout << "Size: " << size << std::endl;
 
-		floatVectorsA.push_back(dataFA);
-        floatVectorsB.push_back(dataFB);
-        intVectorsA.push_back(dataIA);
-        intVectorsB.push_back(dataIB);
+		// print dataFA
+		std::cout << "Test data: " << std::endl;
+		std::cout << "Float Vector A: " << std::endl;
+		printVector(dataFA);
 
+		std::cout << "Float Vector B: " << std::endl;
+		printVector(dataFB);
+
+		std::cout << "Int Vector A: " << std::endl;
+		printVector(dataIA);
+
+		std::cout << "Int Vector B: " << std::endl;
+		printVector(dataIB);
+
+		std::cout << std::endl;
+		std::cout << "Execution times: " << std::endl;
 
         // Benchmark normalizeVector (float)
         benchmarkAndSave("normalizeVector", "float", size,
@@ -72,40 +78,6 @@ int main() {
         benchmarkAndSave("vectorAddition", "int", size,
             [&dataIA, &dataIB]() { return vectorAddition(dataIA, dataIB); });
     }
-
-	std::cout << "Test data: " << std::endl;
-
-	// print floatVectorsA
-	std::cout << "floatVectorsA: " << std::endl;
-	for (int i = 0; i < floatVectorsA.size(); i++) {
-		std::cout << "size: " << sizes.at(i) << std::endl;
-
-		printVector(floatVectorsA.at(i));
-	}
-
-	// print floatVectorsB
-	std::cout << "floatVectorsB: " << std::endl;
-	for (int i = 0; i < floatVectorsB.size(); i++) {
-		std::cout << "size: " << sizes.at(i) << std::endl;
-
-		printVector(floatVectorsB.at(i));
-	}
-
-	// print intVectorsA
-	std::cout << "intVectorsA: " << std::endl;
-	for (int i = 0; i < intVectorsA.size(); i++) {
-		std::cout << "size: " << sizes.at(i) << std::endl;
-
-		printVector(intVectorsA.at(i));
-	}
-
-	// print intVectorsB
-	std::cout << "intVectorsB: " << std::endl;
-	for (int i = 0; i < intVectorsB.size(); i++) {
-		std::cout << "size: " << sizes.at(i) << std::endl;
-
-		printVector(intVectorsB.at(i));
-	}
 
     return 0;
 }
