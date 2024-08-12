@@ -1,5 +1,14 @@
 #include "../include/vector_algorithms.hpp"
 #include <immintrin.h>
+#include <cstdio>
+
+void printVector(const std::vector<float>& vector) {
+    for (int i = 0; i < vector.size(); i++) {
+		// replace with printf
+		printf("%f,", vector.at(i));
+    }
+	printf("\n");
+}
 
 std::vector<float> normalizeVector(std::vector<float>& vec) {
     size_t size = vec.size();
