@@ -1,9 +1,9 @@
-#include <iostream>
 #include <vector>
 #include <chrono>
 #include <fstream>
 #include <functional>
 #include <string>
+#include <cstdio>
 
 #include "../../include/utils.hpp"
 #include "../../include/vector_algorithms.hpp"
@@ -11,14 +11,14 @@
 
 int main() {
     std::vector<size_t> sizes = {
-		16,
-		256,
-		4096,
-		65536,
-		262144
-	};
+        16,
+        256,
+        4096,
+        65536,
+        262144
+    };
 
-	std::cout << "Vector benchmarks" << std::endl;
+    printf("Vector benchmarks\n");
 
     for (auto size : sizes) {
         std::vector<float> dataFA = generateRandomVector<float>(size, 0.0f, 1.0f);
@@ -26,25 +26,24 @@ int main() {
         std::vector<int> dataIA = generateRandomVector<int>(size, 0, 1000);
         std::vector<int> dataIB = generateRandomVector<int>(size, 0, 1000);
 
-		std::cout << std::endl;
-		std::cout << "Size: " << size << std::endl;
+        printf("\n");
+        printf("Size: %zu\n", size);
 
-		// print dataFA
-		std::cout << "Test data: " << std::endl;
-		std::cout << "Float Vector A: " << std::endl;
-		printVector(dataFA);
+        printf("Test data:\n");
+        printf("Float Vector A:\n");
+        printVector(dataFA);
 
-		std::cout << "Float Vector B: " << std::endl;
-		printVector(dataFB);
+        printf("Float Vector B:\n");
+        printVector(dataFB);
 
-		std::cout << "Int Vector A: " << std::endl;
-		printVector(dataIA);
+        printf("Int Vector A:\n");
+        printVector(dataIA);
 
-		std::cout << "Int Vector B: " << std::endl;
-		printVector(dataIB);
+        printf("Int Vector B:\n");
+        printVector(dataIB);
 
-		std::cout << std::endl;
-		std::cout << "Execution times: " << std::endl;
+        printf("\n");
+        printf("Execution times:\n");
 
         // Benchmark normalizeVector (float)
         benchmarkAndSave("normalizeVector", "float", size,

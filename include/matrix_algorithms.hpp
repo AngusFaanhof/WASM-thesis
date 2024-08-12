@@ -3,17 +3,17 @@
 
 #include <vector>
 #include <cstddef>
-#include <iostream>
+#include <cstdio>
 
 template <typename T>
 void printMatrix(const std::vector<T>& matrix) {
-	for (int i = 0; i < matrix.size(); i++) {
-		if (i == matrix.size() - 1)
-			std::cout << matrix[i];
-		else
-			std::cout << matrix[i] << ",";
-	}
-	std::cout << std::endl;
+    for (size_t i = 0; i < matrix.size(); i++) {
+        if (i == matrix.size() - 1)
+            printf("%g", static_cast<double>(matrix[i]));
+        else
+            printf("%g,", static_cast<double>(matrix[i]));
+    }
+    printf("\n");
 }
 
 std::vector<float> transposeMatrix(const std::vector<float>& m, size_t rowsCols);

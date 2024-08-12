@@ -1,7 +1,6 @@
 #include "../include/mandelbrot.hpp"
 
 #include <immintrin.h>
-#include <iostream>
 
 std::vector<int> mandelbrot(int pixelWidth, int pixelHeight, int maxIterations) {
     std::vector<int> mandelbrot(pixelWidth * pixelHeight);

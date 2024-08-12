@@ -1,7 +1,6 @@
 #include "../include/matrix_algorithms.hpp"
 
 #include <immintrin.h>
-#include <iostream>
 #include <iomanip>
 
 
