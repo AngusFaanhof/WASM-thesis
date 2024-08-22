@@ -15,16 +15,16 @@ nice -n -20 bin/native/mandelbrot | python3 scripts/unpack.py Native
 echo "Finished running native mandelbrot"
 
 # Wasmer
-nice -n -20 ${wasmer_path} run bin/matrix.wasm | python3 scripts/unpack.py Wasmer
+nice -n -20 ${wasmer_path} run bin/wasmer/matrix.wasmu | python3 scripts/unpack.py Wasmer
 echo "Finished running wasmer matrix"
 
-nice -n -20 ${wasmer_path} run bin/vector.wasm | python3 scripts/unpack.py Wasmer
+nice -n -20 ${wasmer_path} run bin/wasmer/vector.wasmu | python3 scripts/unpack.py Wasmer
 echo "Finished running wasmer vector"
 
-nice -n -20 ${wasmer_path} run bin/mandelbrot.wasm | python3 scripts/unpack.py Wasmer
+nice -n -20 ${wasmer_path} run bin/wasmer/mandelbrot.wasmu | python3 scripts/unpack.py Wasmer
 echo "Finished running wasmer mandelbrot"
 
-# # Wasmtime
+# Wasmtime (AOT)
 nice -n -20 ${wasmtime_path} --allow-precompiled bin/wasmtime/matrix.cwasm | python3 scripts/unpack.py Wasmtime
 echo "Finished running wasmtime matrix"
 
@@ -34,7 +34,7 @@ echo "Finished running wasmtime vector"
 nice -n -20 ${wasmtime_path} --allow-precompiled bin/wasmtime/mandelbrot.cwasm | python3 scripts/unpack.py Wasmtime
 echo "Finished running wasmtime mandelbrot"
 
-# # Wasmedge
+# Wasmedge (AOT)
 nice -n -20 ${wasmedge_path} run bin/wasmedge/matrix.cwasm | python3 scripts/unpack.py Wasmedge
 echo "Finished running wasmedge matrix"
 

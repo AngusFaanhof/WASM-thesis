@@ -3,8 +3,8 @@
 # Compiler settings
 CXX = g++
 EMCC = em++
-CXXFLAGS = -mavx -I./include
-EMCCFLAGS = -mavx -msimd128 -I./include -std=c++17
+CXXFLAGS = -mavx -I./include -O3
+EMCCFLAGS = -mavx -msimd128 -I./include -std=c++17 -O3
 
 #include path
 INCLUDE = -I./include
@@ -53,6 +53,6 @@ wasmer:
 	wasmer compile -o bin/wasmer/mandelbrot.wasmu bin/mandelbrot.wasm
 
 wasmedge:
-	wasmedge compile bin/vector.wasm bin/wasmedge/vector.cwasm
-	wasmedge compile bin/matrix.wasm bin/wasmedge/matrix.cwasm
-	wasmedge compile bin/mandelbrot.wasm bin/wasmedge/mandelbrot.cwasm
+	wasmedge compile --optimize 3 bin/vector.wasm bin/wasmedge/vector.cwasm
+	wasmedge compile --optimize 3 bin/matrix.wasm bin/wasmedge/matrix.cwasm
+	wasmedge compile --optimize 3 bin/mandelbrot.wasm bin/wasmedge/mandelbrot.cwasm
